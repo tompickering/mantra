@@ -2,6 +2,7 @@
 #include <signal.h>
 
 #include "draw.h"
+#include "win/win.h"
 
 void ncurses_init() {
     initscr();
@@ -21,6 +22,7 @@ int main(int argc, char** argv) {
     int ch = 0;
 
     ncurses_init();
+    win_init_all();
     do {
         draw_screen();
     } while((ch = getch()) != 'q');

@@ -3,10 +3,24 @@
 
 #include <ncurses.h>
 
-void win_init(WINDOW**);
-void win_setup(WINDOW*, int, int, int, int);
-void draw_win_bookmarks(int, int, int, int);
-void draw_win_pages(int, int, int, int);
-void draw_win_helpbar(int, int, int, int);
+typedef struct _Win {
+    WINDOW* win;
+    void (*draw)();
+} Win;
+
+const int WIN_IDX_BOOKMARKS = 0;
+const int WIN_IDX_PAGES     = 1;
+const int WIN_IDX_HELPBAR   = 2;
+const int NWIN              = 3;
+
+extern Win** wins;
+
+void win_init_all();
+void win_update(int, int, int, int, int);
+void win_draw_border();
+void draw_windows();
+void draw_win_bookmarks();
+void draw_win_pages();
+void draw_win_helpbar();
 
 #endif

@@ -3,18 +3,18 @@
 #include <ncurses.h>
 #include <string.h>
 
-WINDOW* win_helpbar = NULL;
-
 const char helpstr[] = "/-Search   Space-Switch   Enter-Open   jk-Navigate   t-Tag   f-Filter";
 
-void draw_win_helpbar(int x, int y, int r, int c) {
+void draw_win_helpbar() {
+    int rows, cols;
     int helplen, xoff;
-    if (!win_helpbar) win_init(&win_helpbar);
-    win_setup(win_helpbar, x, y, r, c);
+    Win* win = wins[WIN_IDX_HELPBAR];
+    getmaxyx(win->win, rows, cols);
     helplen = strlen(helpstr);
-    xoff = (c - helplen) >> 1;
+    xoff = (cols - helplen) >> 1;
     if (xoff > 0)
-        wmove(win_helpbar, 0, xoff);
-    wprintw(win_helpbar, "%s", helpstr);
-    wrefresh(win_helpbar);
+        wmove(win->win, 0, xoff);
+    wprintw(win->win, "%s", helpstr);
+    wrefresh(win->win);
+
 }
