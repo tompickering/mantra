@@ -12,7 +12,7 @@ void draw_windows(int r, int c) {
     win_update(WIN_IDX_BOOKMARKS, 0, 0, h_bk, c);
     win_update(WIN_IDX_PAGES, 0, h_bk, r - h_bk - 1, c);
     win_update(WIN_IDX_HELPBAR, 0, r - 1, 1, c);
-    draw_windows();
+    win_draw_all();
 }
 
 void draw_screen() {

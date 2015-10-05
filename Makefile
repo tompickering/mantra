@@ -1,4 +1,4 @@
-CC=g++ -g
+CC=gcc
 LDLIBS=-lncurses
 NAME=mantra
 #CXXFLAGS=-03

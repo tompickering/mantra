@@ -4,11 +4,17 @@
 
 #include <stdlib.h>
 
+const int WIN_IDX_BOOKMARKS = 0;
+const int WIN_IDX_PAGES     = 1;
+const int WIN_IDX_HELPBAR   = 2;
+const int NWIN              = 3;
+
 Win** wins;
 
 void win_init_all() {
+    int i;
     wins = (Win**) malloc(NWIN * sizeof(Win*));
-    for (int i = 0; i < NWIN; ++i) {
+    for (i = 0; i < NWIN; ++i) {
         wins[i] = (Win*) malloc(sizeof(Win));
         wins[i]->win = newwin(0, 0, 0, 0);
     }
@@ -23,7 +29,12 @@ void win_update(int idx, int x, int y, int r, int c) {
     mvwin(win, y, x);
 }
 
-void draw_windows() {
-    for (int i = 0; i < NWIN; ++i)
+void win_draw_border(Win* win) {
+    box(win->win, 0, 0);
+}
+
+void win_draw_all() {
+    int i;
+    for (i = 0; i < NWIN; ++i)
         wins[i]->draw();
 }

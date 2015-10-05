@@ -8,17 +8,17 @@ typedef struct _Win {
     void (*draw)();
 } Win;
 
-const int WIN_IDX_BOOKMARKS = 0;
-const int WIN_IDX_PAGES     = 1;
-const int WIN_IDX_HELPBAR   = 2;
-const int NWIN              = 3;
+extern const int WIN_IDX_BOOKMARKS;
+extern const int WIN_IDX_PAGES;
+extern const int WIN_IDX_HELPBAR;
+extern const int NWIN;
 
 extern Win** wins;
 
 void win_init_all();
 void win_update(int, int, int, int, int);
-void win_draw_border();
-void draw_windows();
+void win_draw_border(Win*);
+void win_draw_all();
 void draw_win_bookmarks();
 void draw_win_pages();
 void draw_win_helpbar();

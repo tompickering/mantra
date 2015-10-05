@@ -1,9 +1,9 @@
-#include <ncurses.h>
-
 #include "win.h"
+
+#include <ncurses.h>
 
 void draw_win_pages() {
     Win* win = wins[WIN_IDX_PAGES];
-    box(win->win, 0, 0);
+    win_draw_border(win);
     wrefresh(win->win);
 }
