@@ -27,6 +27,10 @@ void win_init_all() {
     wins[WIN_IDX_PAGES    ]->draw = draw_win_pages    ;
     wins[WIN_IDX_HELPBAR  ]->draw = draw_win_helpbar  ;
 
+    wins[WIN_IDX_BOOKMARKS]->can_be_active = true;
+    wins[WIN_IDX_PAGES    ]->can_be_active = true;
+    wins[WIN_IDX_HELPBAR  ]->can_be_active = true;
+
     init_pair(WIN_COL_PAIR_NORMAL, COLOR_WHITE, COLOR_BLACK);
     init_pair(WIN_COL_PAIR_ACTIVE, COLOR_GREEN, COLOR_BLACK);
     win_act_idx = WIN_IDX_BOOKMARKS;
@@ -51,6 +55,20 @@ void win_clear_all() {
         wiper[c] = '\0';
         for (j = 0; j < r; ++j)
             mvwprintw(win, j, 0, wiper);
+    }
+}
+
+/**
+ * Find the next Win for which can_be_active is true
+ * and make it the currently-active window.
+ */
+void win_cycle_active() {
+    int idx;
+    for (idx = (win_act_idx + 1) % NWIN; idx != win_act_idx; idx = ++idx % NWIN) {
+        if (wins[idx]->can_be_active) {
+            win_act_idx = idx;
+            break;
+        }
     }
 }
 

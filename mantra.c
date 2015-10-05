@@ -44,8 +44,7 @@ int main(int argc, char** argv) {
                 }
                 break;
             case ' ':
-                win_act = (win_active() == WIN_IDX_PAGES) ? WIN_IDX_BOOKMARKS : WIN_IDX_PAGES;
-                win_set_active(win_act);
+                win_cycle_active();
         }
         draw_screen();
     } while((ch = getch()) != 'q');

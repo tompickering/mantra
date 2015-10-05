@@ -4,6 +4,7 @@
 #include <ncurses.h>
 
 typedef struct _Win {
+    bool can_be_active;
     WINDOW* win;
     void (*draw)();
 } Win;
@@ -21,6 +22,7 @@ extern Win** wins;
 void win_init_all();
 void win_update(int, int, int, int, int);
 void win_clear_all();
+void win_cycle_active();
 void win_set_active(int);
 int  win_active();
 void win_draw_border(Win*);
