@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <signal.h>
 
+#include "page.h"
 #include "draw.h"
 #include "win/win.h"
 
@@ -33,6 +34,7 @@ int main(int argc, char** argv) {
 
     ncurses_init();
     win_init_all();
+    pages_init();
     do {
         switch (ch) {
             case -1:
