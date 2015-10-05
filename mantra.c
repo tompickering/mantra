@@ -20,10 +20,18 @@ void ncurses_close() {
 
 int main(int argc, char** argv) {
     int ch = 0;
+    int win_act;
 
     ncurses_init();
     win_init_all();
     do {
+        switch (ch) {
+            case -1:
+                break;
+            case ' ':
+                win_act = (win_active() == WIN_IDX_PAGES) ? WIN_IDX_BOOKMARKS : WIN_IDX_PAGES;
+                win_set_active(win_act);
+        }
         draw_screen();
     } while((ch = getch()) != 'q');
     ncurses_close();
