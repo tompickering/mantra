@@ -3,6 +3,7 @@
 #include <ncurses.h>
 
 #include <stdlib.h>
+#include <string.h>
 
 const int WIN_COL_PAIR_NORMAL = 0;
 const int WIN_COL_PAIR_ACTIVE = 1;
@@ -35,6 +36,22 @@ void win_update(int idx, int x, int y, int r, int c) {
     WINDOW* win = wins[idx]->win;
     wresize(win, r, c);
     mvwin(win, y, x);
+}
+
+void win_clear_all() {
+    int i, j, r, c;
+    WINDOW* win;
+    char wipe_char = ' ';
+    char* wiper;
+    for (i = 0; i < NWIN; ++i) {
+        win = wins[i]->win;
+        getmaxyx(win, r, c);
+        wiper = (char*) malloc((c + 1) * sizeof(char));
+        memset(wiper, wipe_char, c);
+        wiper[c] = '\0';
+        for (j = 0; j < r; ++j)
+            mvwprintw(win, j, 0, wiper);
+    }
 }
 
 void win_set_active(int idx) {
