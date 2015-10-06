@@ -29,7 +29,7 @@ void win_init_all() {
 
     wins[WIN_IDX_BOOKMARKS]->can_be_active = true;
     wins[WIN_IDX_PAGES    ]->can_be_active = true;
-    wins[WIN_IDX_HELPBAR  ]->can_be_active = true;
+    wins[WIN_IDX_HELPBAR  ]->can_be_active = false;
 
     init_pair(WIN_COL_PAIR_NORMAL, COLOR_WHITE, COLOR_BLACK);
     init_pair(WIN_COL_PAIR_ACTIVE, COLOR_GREEN, COLOR_BLACK);
