@@ -2,13 +2,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void pages_init() {
     char sect;
     FILE* fp;
     size_t len;
     char* line = NULL;
-    char cmd[] = "man -k . -s  ";
+    char* tok = NULL;
+    char tok_delim[2] = " ";
+    char cmd[] = "man -k . -s   ";
     for (sect = 1; sect < 10; ++sect) {
         cmd[12] = ('0' + sect);
         fp = popen(cmd, "r");
@@ -17,7 +20,10 @@ void pages_init() {
             exit(1);
         }
         while ((getline(&line, &len, fp)) != -1) {
-            // TODO: Something useful with the output!
+            tok = strtok(line, tok_delim);
+            do {
+                // TODO: Something useful with the output!
+            } while ((tok = strtok(NULL, tok_delim)) != NULL);
         }
     }
     pclose(fp);
