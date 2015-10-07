@@ -29,6 +29,7 @@ void ncurses_close() {
 int main(int argc, char** argv) {
     int ch = 0;
     int win_act;
+    bool running = true;
 
     signal(SIGWINCH, handle_sigwinch);
 
@@ -36,19 +37,18 @@ int main(int argc, char** argv) {
     win_init_all();
     pages_init();
     do {
-        switch (ch) {
-            case -1:
-                if (flag_sigwinch) {
-                    flag_sigwinch = false;
-                    endwin();
-                    win_clear_all();
-                    refresh();
-                }
-                break;
-            case ' ':
-                win_cycle_active();
+        ch = getch();
+        if (ch == -1) {
+            if (flag_sigwinch) {
+                flag_sigwinch = false;
+                endwin();
+                win_clear_all();
+                refresh();
+            }
+        } else {
+            running = handle_input(ch);
         }
         draw_screen();
-    } while((ch = getch()) != 'q');
+    } while(running);
     ncurses_close();
 }
