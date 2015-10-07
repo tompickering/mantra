@@ -1,5 +1,7 @@
-#include <ncurses.h>
 #include <signal.h>
+#include <stdbool.h>
+
+#include <ncurses.h>
 
 #include "page.h"
 #include "draw.h"

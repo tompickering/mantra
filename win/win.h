@@ -1,6 +1,8 @@
 #ifndef GUARD_WIN_H
 #define GUARD_WIN_H
 
+#include <stdbool.h>
+
 #include <ncurses.h>
 
 typedef struct _Win {

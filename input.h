@@ -4,7 +4,7 @@
 #define K_CYCLE ' '
 #define K_QUIT  'q'
 
-#include <ncurses.h>
+#include <stdbool.h>
 
 bool handle_input(int ch);
 

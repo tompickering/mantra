@@ -1,5 +1,7 @@
 #include "input.h"
 
+#include <stdbool.h>
+
 #include "win/win.h"
 
 bool handle_input(int ch) {

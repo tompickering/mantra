@@ -1,6 +1,9 @@
 #include "draw.h"
 
+#include <stdbool.h>
+
 #include <ncurses.h>
+
 #include "win/win.h"
 
 void get_dims(int* r, int* c) {

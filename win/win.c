@@ -1,9 +1,10 @@
 #include "win.h"
 
-#include <ncurses.h>
-
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+
+#include <ncurses.h>
 
 const int WIN_COL_PAIR_NORMAL = 0;
 const int WIN_COL_PAIR_ACTIVE = 1;
