@@ -28,6 +28,7 @@ void pages_init() {
     npages = atoi(line);
     pages = malloc(npages * sizeof(Page));
     NPAGES = npages;
+    pclose(fp);
 
     // Allocate one additional element - the overhead
     // is worth the convenience of being able to address
