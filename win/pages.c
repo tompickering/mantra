@@ -4,6 +4,8 @@
 
 #include "../page.h"
 
+int current_row = 0;
+
 void win_page_show(Win* win) {
     int r = 1;
     int c = 2;
@@ -18,6 +20,7 @@ void win_page_show(Win* win) {
         mvwprintw(win->win, r, c, sect);
         mvwprintw(win->win, r, c + 2, page->name);
     }
+    mvwchgat(win->win, current_row + 1, 1, win->c - 2, A_REVERSE, WIN_COL_PAIR_ACTIVE, NULL);
 }
 
 void draw_win_pages() {
