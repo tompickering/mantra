@@ -4,14 +4,22 @@
 #include <stdlib.h>
 #include <string.h>
 
+Page* pages = NULL;
+
+// FIXME: Try to get this data using libmandb rather than a command
+// FIXME: Store the data in a hash table, not a linked list
 void pages_init() {
-    char sect;
     FILE* fp;
-    size_t len;
-    char* line = NULL;
-    char* tok = NULL;
+    char sect;
     char tok_delim[2] = " ";
     char cmd[] = "man -k . -s   ";
+    char* line = NULL;
+    char* tok = NULL;
+    size_t len;
+    size_t toklen;
+    Page* page = NULL;
+    Page* prevpage = NULL;
+
     for (sect = 1; sect < 10; ++sect) {
         cmd[12] = ('0' + sect);
         fp = popen(cmd, "r");
@@ -20,11 +28,19 @@ void pages_init() {
             exit(1);
         }
         while ((getline(&line, &len, fp)) != -1) {
+            page = (Page*) malloc(sizeof(Page));
+            if (pages == NULL)
+                pages = page;
+            if (prevpage != NULL)
+                prevpage->next = page;
             tok = strtok(line, tok_delim);
-            do {
-                // TODO: Something useful with the output!
-            } while ((tok = strtok(NULL, tok_delim)) != NULL);
+            toklen = strlen(tok);
+            page->name = (char*) malloc((toklen+1) * sizeof(char));
+            strcpy(page->name, tok);
+            page->sect = sect;
+            prevpage = page;
         }
     }
+
     pclose(fp);
 }
