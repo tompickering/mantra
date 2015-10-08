@@ -10,6 +10,10 @@ unsigned int NPAGES;
 const unsigned char NSECTS = 9;
 
 // FIXME: Try to get this data using libmandb rather than a command
+/**
+ * Source a list of man pages in the system and store
+ * the information in a data construct ('pages').
+ */
 void pages_init() {
     FILE* fp;
     int npages;

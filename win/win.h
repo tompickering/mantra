@@ -6,6 +6,8 @@
 #include <ncurses.h>
 
 typedef struct _Win {
+    unsigned int r;
+    unsigned int c;
     bool can_be_active;
     WINDOW* win;
     void (*draw)();

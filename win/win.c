@@ -92,6 +92,11 @@ void win_draw_border(Win* win) {
 
 void win_draw_all() {
     int i;
-    for (i = 0; i < NWIN; ++i)
+    int r, c;
+    for (i = 0; i < NWIN; ++i) {
+        getmaxyx(wins[i]->win, r, c);
+        wins[i]->r = r;
+        wins[i]->c = c;
         wins[i]->draw();
+    }
 }
