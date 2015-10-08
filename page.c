@@ -5,12 +5,14 @@
 #include <string.h>
 
 Page* pages = NULL;
+unsigned int NPAGES;
 
 // FIXME: Try to get this data using libmandb rather than a command
-// FIXME: Store the data in a hash table, not a linked list
 void pages_init() {
     FILE* fp;
+    int npages;
     char sect;
+    int page_idx = 0;
     char tok_delim[2] = " ";
     char cmd[] = "man -k . -s   ";
     char* line = NULL;
@@ -18,7 +20,12 @@ void pages_init() {
     size_t len;
     size_t toklen;
     Page* page = NULL;
-    Page* prevpage = NULL;
+
+    fp = popen("man -k . | wc -l", "r");
+    getline(&line, &len, fp);
+    npages = atoi(line);
+    pages = malloc(npages * sizeof(Page));
+    NPAGES = npages;
 
     for (sect = 1; sect < 10; ++sect) {
         cmd[12] = ('0' + sect);
@@ -28,17 +35,12 @@ void pages_init() {
             exit(1);
         }
         while ((getline(&line, &len, fp)) != -1) {
-            page = (Page*) malloc(sizeof(Page));
-            if (pages == NULL)
-                pages = page;
-            if (prevpage != NULL)
-                prevpage->next = page;
+            page = &pages[page_idx++];
             tok = strtok(line, tok_delim);
             toklen = strlen(tok);
             page->name = (char*) malloc((toklen+1) * sizeof(char));
             strcpy(page->name, tok);
             page->sect = sect;
-            prevpage = page;
         }
     }
 

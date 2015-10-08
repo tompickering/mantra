@@ -10,6 +10,7 @@ struct _Page {
 };
 
 extern Page* pages;
+extern unsigned int NPAGES;
 
 void pages_init();
 
