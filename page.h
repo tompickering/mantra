@@ -11,6 +11,7 @@ struct _Page {
 
 extern Page* pages;
 extern unsigned int NPAGES;
+extern const unsigned char NSECTS;
 
 void pages_init();
 
