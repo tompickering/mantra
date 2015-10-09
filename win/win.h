@@ -22,6 +22,7 @@ extern const int WIN_IDX_HELPBAR;
 extern const int NWIN;
 
 extern Win** wins;
+extern int win_act_idx;
 
 void win_init_all();
 void win_update(int, int, int, int, int);
