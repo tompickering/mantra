@@ -55,6 +55,12 @@ void pages_init() {
             page->name = (char*) malloc((toklen+1) * sizeof(char));
             strcpy(page->name, tok);
             page->sect = sect;
+            strtok(NULL, tok_delim);
+            strtok(NULL, tok_delim);
+            tok = strtok(NULL, "");
+            toklen = strlen(tok);
+            page->desc = (char*) malloc((toklen+1) * sizeof(char));
+            strcpy(page->desc, tok);
         }
     }
 

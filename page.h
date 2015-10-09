@@ -6,7 +6,7 @@ typedef struct _Page Page;
 struct _Page {
     char sect;
     char* name;
-    Page* next;
+    char* desc;
 };
 
 extern Page* pages;
