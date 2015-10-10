@@ -5,6 +5,7 @@
 
 #include <ncurses.h>
 
+#include "../input.h"
 #include "../page.h"
 
 int current_row = 0;
@@ -41,4 +42,7 @@ void draw_win_pages() {
     win_page_show(win);
     win_draw_border(win);
     wrefresh(win->win);
+}
+
+void input_win_pages(int c) {
 }

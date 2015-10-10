@@ -11,6 +11,7 @@ typedef struct _Win {
     bool can_be_active;
     WINDOW* win;
     void (*draw)();
+    void (*input)(int);
 } Win;
 
 extern const int WIN_COL_PAIR_NORMAL;
@@ -35,5 +36,8 @@ void win_draw_all();
 void draw_win_bookmarks();
 void draw_win_pages();
 void draw_win_helpbar();
+void input_win_bookmarks(int);
+void input_win_pages(int);
+Win* active_win();
 
 #endif

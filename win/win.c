@@ -17,6 +17,11 @@ const int NWIN              = 3;
 Win** wins;
 int win_act_idx;
 
+void input_default(int n) {
+    fprintf(stderr, "Error: This window does not take input.\n");
+    exit(1);
+}
+
 void win_init_all() {
     int i;
     wins = (Win**) malloc(NWIN * sizeof(Win*));
@@ -27,6 +32,10 @@ void win_init_all() {
     wins[WIN_IDX_BOOKMARKS]->draw = draw_win_bookmarks;
     wins[WIN_IDX_PAGES    ]->draw = draw_win_pages    ;
     wins[WIN_IDX_HELPBAR  ]->draw = draw_win_helpbar  ;
+
+    wins[WIN_IDX_BOOKMARKS]->input = input_win_bookmarks;
+    wins[WIN_IDX_PAGES    ]->input = input_win_pages;
+    wins[WIN_IDX_HELPBAR  ]->input = input_default;
 
     wins[WIN_IDX_BOOKMARKS]->can_be_active = true;
     wins[WIN_IDX_PAGES    ]->can_be_active = true;
@@ -99,4 +108,8 @@ void win_draw_all() {
         wins[i]->c = c;
         wins[i]->draw();
     }
+}
+
+Win* active_win() {
+    return wins[win_act_idx];
 }

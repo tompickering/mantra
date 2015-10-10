@@ -13,6 +13,8 @@ bool handle_input(int ch) {
         case K_QUIT:
             quit = true;
             break;
+        default:
+            active_win()->input(ch);
     }
     return !quit;
 }
