@@ -20,7 +20,7 @@ void pages_init() {
     char sect;
     int page_idx;
     char tok_delim[2] = " ";
-    char cmd[] = "man -k . -s    | sort";
+    char cmd[] = "man -k . -s    2>/dev/null | sort";
     char* line = NULL;
     char* tok = NULL;
     size_t len;
