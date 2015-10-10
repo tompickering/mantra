@@ -21,16 +21,16 @@ void win_page_show(Win* win) {
     int page_off = _page_start;
     char sect[2]; sect[1] = '\0';
     Page* page;
-    char* name;
-    char* desc;
     int max_desc_len = win->c - _MAX_NAME_LEN - 7;
+    char* name = malloc((_MAX_NAME_LEN + 1) * sizeof(char));
+    char* desc = malloc((max_desc_len + 1) * sizeof(char));
 
     for (; r < win->r - 1; ++r) {
         page = &pages[page_off++];
         sect[0] = '0' + page->sect;
         mvwprintw(win->win, r, c, sect);
-        name = string_clean_buffer(page->name, _MAX_NAME_LEN);
-        desc = string_clean_buffer(page->desc,  max_desc_len);
+        string_clean_buffer(name, page->name, _MAX_NAME_LEN);
+        string_clean_buffer(desc, page->desc,  max_desc_len);
         mvwprintw(win->win, r, c + 2, name);
         mvwprintw(win->win, r, c + 3 + _MAX_NAME_LEN, desc);
     }

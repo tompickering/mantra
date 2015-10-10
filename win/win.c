@@ -115,12 +115,11 @@ Win* active_win() {
 }
 
 /**
- * Allocate memory and copy a string into it, to a max of len bytes.
+ * Copy a string into a buffer to a max of len bytes.
  * Furthermore, ensure that the buffer is clean and null-terminated.
  */
-char* string_clean_buffer(char* src, unsigned int len) {
+char* string_clean_buffer(char* buf, char* src, unsigned int len) {
     int src_len = strlen(src);
-    char* buf = (char*) malloc((len + 1) * sizeof(char));
     strncpy(buf, src, len);
     if (src_len > len)
         buf[src_len] = '\0';
