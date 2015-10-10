@@ -134,6 +134,8 @@ char* string_clean_buffer(char* buf, char* src, unsigned int len) {
     strncpy(buf, src, len);
     if (src_len < len)
         memset(buf + src_len, ' ', len - src_len);
+    if (src_len > len)
+        buf[len-3] = buf[len-2] = buf[len-1] = '.';
     buf[len] = '\0';
     return buf;
 }
