@@ -20,16 +20,21 @@ void win_page_show(Win* win) {
     int page_off = _page_start;
     char sect[2]; sect[1] = '\0';
     Page* page;
-    char* name = (char*) malloc(_MAX_NAME_LEN * sizeof(char));
+    char* name = (char*) malloc((_MAX_NAME_LEN + 1) * sizeof(char));
 
     for (; r < win->r - 1; ++r) {
         page = &pages[page_off++];
         sect[0] = '0' + page->sect;
         mvwprintw(win->win, r, c, sect);
+        memset(name, ' ', _MAX_NAME_LEN);
         strcpy(name, page->name);
         if (strlen(name) > _MAX_NAME_LEN)
-            name [_MAX_NAME_LEN] = '\0';
-        mvwprintw(win->win, r, c + 2, page->name);
+            name[strlen(name)] = '\0';
+        else {
+            name[strlen(name)] = ' ';
+            name[_MAX_NAME_LEN] = '\0';
+        }
+        mvwprintw(win->win, r, c + 2, name);
         mvwprintw(win->win, r, c + 3 + _MAX_NAME_LEN, page->desc);
     }
 
@@ -41,6 +46,8 @@ void win_page_show(Win* win) {
         mvwchgat(win->win, _prev_row + 1, 1, win->c - 2, A_NORMAL, WIN_COL_PAIR_NORMAL, NULL);
         _prev_row = _current_row;
     }
+
+    free(name);
 }
 
 void draw_win_pages() {
