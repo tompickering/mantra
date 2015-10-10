@@ -21,22 +21,18 @@ void win_page_show(Win* win) {
     int page_off = _page_start;
     char sect[2]; sect[1] = '\0';
     Page* page;
-    char* name = (char*) malloc((_MAX_NAME_LEN + 1) * sizeof(char));
+    char* name;
+    char* desc;
+    int max_desc_len = win->c - _MAX_NAME_LEN - 7;
 
     for (; r < win->r - 1; ++r) {
         page = &pages[page_off++];
         sect[0] = '0' + page->sect;
         mvwprintw(win->win, r, c, sect);
-        name_len = strlen(page->name);
-        strncpy(name, page->name, _MAX_NAME_LEN);
-        if (name_len > _MAX_NAME_LEN)
-            name[name_len] = '\0';
-        else {
-            memset(name + name_len, ' ', _MAX_NAME_LEN - name_len);
-            name[_MAX_NAME_LEN] = '\0';
-        }
+        name = string_clean_buffer(page->name, _MAX_NAME_LEN);
+        desc = string_clean_buffer(page->desc,  max_desc_len);
         mvwprintw(win->win, r, c + 2, name);
-        mvwprintw(win->win, r, c + 3 + _MAX_NAME_LEN, page->desc);
+        mvwprintw(win->win, r, c + 3 + _MAX_NAME_LEN, desc);
     }
 
     col_pair = WIN_COL_PAIR_NORMAL;

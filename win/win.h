@@ -39,5 +39,6 @@ void draw_win_helpbar();
 void input_win_bookmarks(int);
 void input_win_pages(int);
 Win* active_win();
+char* string_clean_buffer(char*, unsigned int);
 
 #endif

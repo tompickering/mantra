@@ -113,3 +113,20 @@ void win_draw_all() {
 Win* active_win() {
     return wins[win_act_idx];
 }
+
+/**
+ * Allocate memory and copy a string into it, to a max of len bytes.
+ * Furthermore, ensure that the buffer is clean and null-terminated.
+ */
+char* string_clean_buffer(char* src, unsigned int len) {
+    int src_len = strlen(src);
+    char* buf = (char*) malloc((len + 1) * sizeof(char));
+    strncpy(buf, src, len);
+    if (src_len > len)
+        buf[src_len] = '\0';
+    else {
+        memset(buf + src_len, ' ', len - src_len);
+        buf[len] = '\0';
+    }
+    return buf;
+}
