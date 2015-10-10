@@ -17,6 +17,7 @@ void win_page_show(Win* win) {
     int r = 1;
     int c = 2;
     int col_pair;
+    int name_len;
     int page_off = _page_start;
     char sect[2]; sect[1] = '\0';
     Page* page;
@@ -26,12 +27,12 @@ void win_page_show(Win* win) {
         page = &pages[page_off++];
         sect[0] = '0' + page->sect;
         mvwprintw(win->win, r, c, sect);
-        memset(name, ' ', _MAX_NAME_LEN);
-        strcpy(name, page->name);
-        if (strlen(name) > _MAX_NAME_LEN)
-            name[strlen(name)] = '\0';
+        name_len = strlen(page->name);
+        strncpy(name, page->name, _MAX_NAME_LEN);
+        if (name_len > _MAX_NAME_LEN)
+            name[name_len] = '\0';
         else {
-            name[strlen(name)] = ' ';
+            memset(name + name_len, ' ', _MAX_NAME_LEN - name_len);
             name[_MAX_NAME_LEN] = '\0';
         }
         mvwprintw(win->win, r, c + 2, name);
