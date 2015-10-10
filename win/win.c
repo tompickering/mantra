@@ -121,11 +121,8 @@ Win* active_win() {
 char* string_clean_buffer(char* buf, char* src, unsigned int len) {
     int src_len = strlen(src);
     strncpy(buf, src, len);
-    if (src_len > len)
-        buf[src_len] = '\0';
-    else {
+    if (src_len < len)
         memset(buf + src_len, ' ', len - src_len);
-        buf[len] = '\0';
-    }
+    buf[len] = '\0';
     return buf;
 }
