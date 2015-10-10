@@ -57,11 +57,11 @@ void win_clear_all() {
     WINDOW* win;
     char wipe_char = ' ';
     char* wiper = (char*) malloc((c + 1) * sizeof(char));
+    memset(wiper, wipe_char, c);
+    wiper[c] = '\0';
     for (i = 0; i < NWIN; ++i) {
         win = wins[i]->win;
         getmaxyx(win, r, c);
-        memset(wiper, wipe_char, c);
-        wiper[c] = '\0';
         for (j = 0; j < r; ++j)
             mvwprintw(win, j, 0, wiper);
     }
