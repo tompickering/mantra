@@ -64,8 +64,10 @@ void win_clear_row(Win* win, int r) {
 void win_clear_all() {
     int i, j, r, c;
     WINDOW* win;
+    char* wiper;
     char wipe_char = ' ';
-    char* wiper = (char*) malloc((c + 1) * sizeof(char));
+    getmaxyx(stdscr, r, c);
+    wiper = (char*) malloc((c + 1) * sizeof(char));
     memset(wiper, wipe_char, c);
     wiper[c] = '\0';
     for (i = 0; i < NWIN; ++i) {

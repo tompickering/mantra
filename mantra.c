@@ -44,8 +44,8 @@ int main(int argc, char** argv) {
             if (flag_sigwinch) {
                 flag_sigwinch = false;
                 endwin();
-                win_clear_all();
                 refresh();
+                win_clear_all();
             }
         } else {
             running = handle_input(ch);
