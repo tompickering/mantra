@@ -45,6 +45,7 @@ void win_page_show(Win* win) {
     }
 
     free(name);
+    free(desc);
 }
 
 void draw_win_pages() {
