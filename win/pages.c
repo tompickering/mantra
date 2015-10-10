@@ -63,7 +63,7 @@ void _navigate(bool down) {
     if (down) {
         if (_current_row + 3 < win->r) {
             ++_current_row;
-        } else {
+        } else if (_page_start + win->r - 2 <= NPAGES) {
             ++_page_start;
         }
     } else {
