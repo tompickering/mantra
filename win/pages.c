@@ -59,6 +59,17 @@ void draw_win_pages() {
     wrefresh(win->win);
 }
 
+void _jump_to_end(bool end) {
+    Win* win = wins[WIN_IDX_PAGES];
+    if (end) {
+        _current_row = win->r - 3;
+        _page_start = NPAGES - win->r + 2;
+    } else {
+        _current_row = 0;
+        _page_start = 0;
+    }
+}
+
 void _navigate(bool down) {
     Win* win = wins[WIN_IDX_PAGES];
     if (down) {
@@ -84,5 +95,11 @@ void input_win_pages(int ch) {
         case K_DOWN:
             down = (ch == K_UP) ? false : true;
             _navigate(down);
+            break;
+        case K_HOME:
+        case K_END:
+            down = (ch == K_HOME) ? false : true;
+            _jump_to_end(down);
+            break;
     }
 }

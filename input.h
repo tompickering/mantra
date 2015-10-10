@@ -5,6 +5,8 @@
 #define K_QUIT  'q'
 #define K_DOWN  'j'
 #define K_UP    'k'
+#define K_HOME  'g'
+#define K_END   'G'
 
 #include <stdbool.h>
 
