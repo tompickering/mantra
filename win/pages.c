@@ -26,6 +26,10 @@ void win_page_show(Win* win) {
     char* desc = malloc((max_desc_len + 1) * sizeof(char));
 
     for (; r < win->r - 1; ++r) {
+        if (page_off == NPAGES) {
+            win_clear_row(win, r);
+            continue;
+        }
         page = &pages[page_off++];
         sect[0] = '0' + page->sect;
         mvwprintw(win->win, r, c, sect);
@@ -60,7 +64,7 @@ void _navigate(bool down) {
     if (down) {
         if (_current_row + 3 < win->r) {
             ++_current_row;
-        } else if (_page_start + win->r - 2 <= NPAGES) {
+        } else if (_page_start + win->r - 2 < NPAGES) {
             ++_page_start;
         }
     } else {

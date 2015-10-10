@@ -27,6 +27,7 @@ extern int win_act_idx;
 
 void win_init_all();
 void win_update(int, int, int, int, int);
+void win_clear_row(Win*, int);
 void win_clear_all();
 void win_cycle_active();
 void win_set_active(int);

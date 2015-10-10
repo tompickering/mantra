@@ -52,6 +52,15 @@ void win_update(int idx, int x, int y, int r, int c) {
     mvwin(win, y, x);
 }
 
+void win_clear_row(Win* win, int r) {
+    char wipe_char = ' ';
+    char* wiper = (char*) malloc((win->c + 1) * sizeof(char));
+    memset(wiper, wipe_char, win->c);
+    wiper[win->c] = '\0';
+    mvwprintw(win->win, r, 0, wiper);
+    free(wiper);
+}
+
 void win_clear_all() {
     int i, j, r, c;
     WINDOW* win;
