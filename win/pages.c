@@ -9,6 +9,7 @@
 #include "../page.h"
 
 int _current_row = 0;
+char* _current_name = NULL;
 int _prev_row = 0;
 int _page_start = 0;
 int _MAX_NAME_LEN = 20;
@@ -53,6 +54,11 @@ void win_page_show(Win* win) {
         _prev_row = _current_row;
     }
 
+    if (_page_start + _current_row < NPAGES)
+        _current_name = pages[_page_start + _current_row].name;
+    else
+        _current_name = NULL;
+
     free(name);
     free(desc);
 }
@@ -93,6 +99,11 @@ void _navigate(bool down) {
     }
 }
 
+void _open_page() {
+    if (_current_name != NULL)
+        open_page(_current_name, 0);
+}
+
 void input_win_pages(int ch) {
     bool down;
     switch (ch) {
@@ -106,5 +117,7 @@ void input_win_pages(int ch) {
             down = (ch == K_HOME) ? false : true;
             _jump_to_end(down);
             break;
+        default:
+            _open_page();
     }
 }

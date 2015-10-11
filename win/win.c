@@ -139,3 +139,14 @@ char* string_clean_buffer(char* buf, char* src, unsigned int len) {
     buf[len] = '\0';
     return buf;
 }
+
+void open_page(char* page, int line) {
+    char* cmd = (char*) malloc((strlen(page) + 4) * sizeof(char));
+    strncpy(cmd, "man ", 4);
+    strcpy(cmd+4, page);
+    system(cmd);
+    free(cmd);
+    endwin();
+    refresh();
+    win_clear_all();
+}
