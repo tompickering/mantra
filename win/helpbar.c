@@ -3,7 +3,7 @@
 #include <ncurses.h>
 #include <string.h>
 
-const char helpstr[] = "/-Search   Space-Switch   Enter-Open   jk-Navigate   t-Tag   f-Filter";
+const char helpstr[] = "/-Search   Space-Switch   o-Open   jk-Navigate   t-Tag   f-Filter";
 
 void draw_win_helpbar() {
     int rows, cols;

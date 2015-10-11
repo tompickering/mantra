@@ -105,8 +105,18 @@ void _open_page() {
 }
 
 void input_win_pages(int ch) {
+    int i;
     bool down;
+    Win* win = wins[WIN_IDX_PAGES];
     switch (ch) {
+        case K_FWD:
+        case K_BACK:
+            // TODO: Implement a function to do this
+            // in one call.
+            down = (ch == K_BACK) ? false : true;
+            for (i = 0; i < win->r - 2; ++i)
+                _navigate(down);
+            break;
         case K_UP:
         case K_DOWN:
             down = (ch == K_UP) ? false : true;
@@ -117,7 +127,8 @@ void input_win_pages(int ch) {
             down = (ch == K_HOME) ? false : true;
             _jump_to_end(down);
             break;
-        default:
+        case K_OPEN:
             _open_page();
+            break;
     }
 }
