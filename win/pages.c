@@ -21,9 +21,14 @@ void win_page_show(Win* win) {
     int page_off = _page_start;
     char sect[2]; sect[1] = '\0';
     Page* page;
-    int max_desc_len = win->c - _MAX_NAME_LEN - 7;
-    char* name = malloc((_MAX_NAME_LEN + 1) * sizeof(char));
-    char* desc = malloc((max_desc_len + 1) * sizeof(char));
+    int max_desc_len;
+    char* name;
+    char* desc;
+
+    _MAX_NAME_LEN = win->c / 3;
+    max_desc_len = win->c - _MAX_NAME_LEN - 7;
+    name = malloc((_MAX_NAME_LEN + 1) * sizeof(char));
+    desc = malloc((max_desc_len + 1) * sizeof(char));
 
     for (; r < win->r - 1; ++r) {
         if (page_off == NPAGES) {
