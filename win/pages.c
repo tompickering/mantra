@@ -99,6 +99,21 @@ void _navigate(bool down) {
     }
 }
 
+void _page(bool down) {
+    Win* win = wins[WIN_IDX_PAGES];
+    if (down) {
+        if (_page_start + 2 * (win->r - 2) < NPAGES) {
+            _page_start += (win->r - 2);
+        } else {
+            _page_start = NPAGES - (win->r - 2);
+        }
+    } else {
+        _page_start -= (win->r - 2);
+        if (_page_start < 0)
+            _page_start = 0;
+    }
+}
+
 void _open_page() {
     if (_current_name != NULL)
         open_page(_current_name, 0);
@@ -111,11 +126,8 @@ void input_win_pages(int ch) {
     switch (ch) {
         case K_FWD:
         case K_BACK:
-            // TODO: Implement a function to do this
-            // in one call.
             down = (ch == K_BACK) ? false : true;
-            for (i = 0; i < win->r - 2; ++i)
-                _navigate(down);
+            _page(down);
             break;
         case K_UP:
         case K_DOWN:
