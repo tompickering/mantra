@@ -6,15 +6,15 @@ This is an ncurses-based terminal application to browse and bookmark man pages.
 
 ## Why?
 
-Two main reasons:
-1:
+Two main reasons:<br/>
+1:<br/>
 ```
 $ man bash | wc -l
 3408
 ```
 
-2:
+2:<br/>
 "Ah, that looks like a cool utility! I'll have to remember to read up on that later."
 *Promptly forgets*
 
-For those interested, the specific mantra referred to by the name refers to 'RTFM, which of course stands for 'Read the Full Manual' ;)
+For those interested, the specific mantra referred to by the name is 'RTFM', which of course stands for 'Read the Full Manual' ;)
