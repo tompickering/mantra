@@ -10,6 +10,7 @@
 
 int _current_row = 0;
 char* _current_name = NULL;
+int _current_sect = 0;
 int _prev_row = 0;
 int _page_start = 0;
 int _MAX_NAME_LEN = 20;
@@ -54,10 +55,13 @@ void win_page_show(Win* win) {
         _prev_row = _current_row;
     }
 
-    if (_page_start + _current_row < NPAGES)
+    if (_page_start + _current_row < NPAGES) {
         _current_name = pages[_page_start + _current_row].name;
-    else
+        _current_sect = pages[_page_start + _current_row].sect;
+    } else {
         _current_name = NULL;
+        _current_sect = 0;
+    }
 
     free(name);
     free(desc);
@@ -115,8 +119,8 @@ void _page(bool down) {
 }
 
 void _open_page() {
-    if (_current_name != NULL)
-        open_page(_current_name, 0);
+    if (_current_name != NULL && _current_sect > 0)
+        open_page(_current_sect, _current_name, 0);
 }
 
 void input_win_pages(int ch) {

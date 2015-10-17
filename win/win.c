@@ -140,10 +140,12 @@ char* string_clean_buffer(char* buf, char* src, unsigned int len) {
     return buf;
 }
 
-void open_page(char* page, int line) {
-    char* cmd = (char*) malloc((strlen(page) + 4) * sizeof(char));
-    strncpy(cmd, "man ", 4);
-    strcpy(cmd+4, page);
+void open_page(int sect, char* page, int line) {
+    char* cmd = (char*) malloc((strlen(page) + 6) * sizeof(char));
+    strncpy(cmd, "man   ", 4);
+    strcpy(cmd+6, page);
+    cmd[4] = '0' + sect;
+    cmd[5] = ' ';
     system(cmd);
     free(cmd);
     endwin();
