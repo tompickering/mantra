@@ -36,6 +36,7 @@ int main(int argc, char** argv) {
     signal(SIGWINCH, handle_sigwinch);
 
     file_init();
+    printf("Loading pages...\n");
     pages_init();
     ncurses_init();
     win_init_all();
