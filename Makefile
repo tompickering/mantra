@@ -12,3 +12,6 @@ $(NAME): $(OBJS)
 
 clean:
 	rm *[.]o
+
+install:
+	cp mantra /usr/bin/
