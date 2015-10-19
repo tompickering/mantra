@@ -35,9 +35,10 @@ int main(int argc, char** argv) {
 
     signal(SIGWINCH, handle_sigwinch);
 
+    file_init();
+    pages_init();
     ncurses_init();
     win_init_all();
-    pages_init();
     do {
         ch = getch();
         if (ch == -1) {
