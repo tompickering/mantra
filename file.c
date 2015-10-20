@@ -8,6 +8,10 @@
 #include <sys/stat.h>
 #include <errno.h>
 
+/**
+ * Create ~/.mantra if it doesn't already exist, and chdir there.
+ * Error out with a meaningful error message if not.
+ */
 void file_init() {
     char* usr_home = NULL;
 

@@ -17,6 +17,10 @@ const int NWIN              = 3;
 Win** wins;
 int win_act_idx;
 
+/**
+ * Default input handler for windows. It should never be called,
+ * but if a bug allows it to be then it's better than a segfault!
+ */
 void input_default(int n) {
     fprintf(stderr, "Error: This window does not take input.\n");
     exit(1);
@@ -46,12 +50,18 @@ void win_init_all() {
     win_act_idx = WIN_IDX_BOOKMARKS;
 }
 
+/**
+ * Update a window's position and size attributes.
+ */
 void win_update(int idx, int x, int y, int r, int c) {
     WINDOW* win = wins[idx]->win;
     wresize(win, r, c);
     mvwin(win, y, x);
 }
 
+/**
+ * Overwrite a row of characters in a window with spaces.
+ */
 void win_clear_row(Win* win, int r) {
     char wipe_char = ' ';
     char* wiper = (char*) malloc((win->c + 1) * sizeof(char));
@@ -61,6 +71,11 @@ void win_clear_row(Win* win, int r) {
     free(wiper);
 }
 
+/**
+ * Completely overwrite a window's area with space characters.
+ * This does not call win_clear_row for memory allocation
+ * efficiency.
+ */
 void win_clear_all() {
     int i, j, r, c;
     WINDOW* win;
@@ -110,6 +125,9 @@ void win_draw_border(Win* win) {
     wattroff(win->win, COLOR_PAIR(col_pair));
 }
 
+/**
+ * Iterate over all windows and call their draw method.
+ */
 void win_draw_all() {
     int i;
     int r, c;
@@ -140,6 +158,9 @@ char* string_clean_buffer(char* buf, char* src, unsigned int len) {
     return buf;
 }
 
+/**
+ * Spawn a 'man' process displaying the requested page.
+ */
 void open_page(int sect, char* page, int line) {
     char* cmd = (char*) malloc((strlen(page) + 6) * sizeof(char));
     strncpy(cmd, "man   ", 4);

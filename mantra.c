@@ -9,6 +9,11 @@
 
 volatile bool flag_sigwinch = false;
 
+/**
+ * Registered as SIGWINCH handler
+ * Set a flag to indicate that windows need
+ * a complete redraw.
+ */
 void handle_sigwinch(int sig) {
     flag_sigwinch = true;
 }
