@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 #include <ncurses.h>
+#include <panel.h>
 
 const int WIN_COL_PAIR_NORMAL = 0;
 const int WIN_COL_PAIR_ACTIVE = 1;
@@ -33,6 +34,11 @@ void win_init_all() {
         wins[i] = (Win*) malloc(sizeof(Win));
         wins[i]->win = newwin(0, 0, 0, 0);
     }
+
+    wins[WIN_IDX_BOOKMARKS]->pnl = NULL;
+    wins[WIN_IDX_PAGES    ]->pnl = NULL;
+    wins[WIN_IDX_HELPBAR  ]->pnl = NULL;
+
     wins[WIN_IDX_BOOKMARKS]->draw = draw_win_bookmarks;
     wins[WIN_IDX_PAGES    ]->draw = draw_win_pages    ;
     wins[WIN_IDX_HELPBAR  ]->draw = draw_win_helpbar  ;

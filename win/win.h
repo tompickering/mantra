@@ -4,12 +4,14 @@
 #include <stdbool.h>
 
 #include <ncurses.h>
+#include <panel.h>
 
 typedef struct _Win {
     unsigned int r;
     unsigned int c;
     bool can_be_active;
     WINDOW* win;
+    PANEL* pnl;
     void (*draw)();
     void (*input)(int);
 } Win;
