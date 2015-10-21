@@ -59,8 +59,8 @@ void win_init_all() {
 /**
  * Update a window's position and size attributes.
  */
-void win_update(int idx, int x, int y, int r, int c) {
-    WINDOW* win = wins[idx]->win;
+void win_update(Win* window, int x, int y, int r, int c) {
+    WINDOW* win = window->win;
     wresize(win, r, c);
     mvwin(win, y, x);
 }
