@@ -189,11 +189,14 @@ char* string_clean_buffer(char* buf, char* src, unsigned int len) {
  * Spawn a 'man' process displaying the requested page.
  */
 void open_page(int sect, char* page, int line) {
-    char* cmd = (char*) malloc((strlen(page) + 6) * sizeof(char));
+    char* cmd;
+    int cmd_len = strlen(page) + 7; // len("man x " "\0")
+    cmd = (char*) malloc(cmd_len * sizeof(char));
     strncpy(cmd, "man   ", 4);
     strcpy(cmd+6, page);
     cmd[4] = '0' + sect;
     cmd[5] = ' ';
+    cmd[cmd_len - 1] = '\0';
     system(cmd);
     free(cmd);
     endwin();
