@@ -1,0 +1,9 @@
+*
+!.gitignore
+!Makefile
+!README.md
+!*.c
+!*.h
+!win
+!win/**/*.c
+!win/**/*.h
