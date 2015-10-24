@@ -22,6 +22,7 @@ extern const int WIN_COL_PAIR_ACTIVE;
 extern const int WIN_IDX_BOOKMARKS;
 extern const int WIN_IDX_PAGES;
 extern const int WIN_IDX_HELPBAR;
+extern const int WIN_IDX_BOOKPNL;
 extern const int NWIN;
 
 extern Win** wins;
@@ -39,8 +40,10 @@ void win_draw_all();
 void draw_win_bookmarks();
 void draw_win_pages();
 void draw_win_helpbar();
+void draw_win_bookpnl();
 void input_win_bookmarks(int);
 void input_win_pages(int);
+void input_win_bookpnl(int);
 Win* active_win();
 char* string_clean_buffer(char*, char*, unsigned int);
 void open_page(int, char*, int);
