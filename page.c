@@ -9,7 +9,7 @@ Page** SECT;
 unsigned int NPAGES;
 const unsigned char NSECTS = 9;
 
-// FIXME: Try to get this data using libmandb rather than a command
+/* FIXME: Try to get this data from the mandb rather than a command */
 /**
  * Source a list of man pages in the system and store
  * the information in a data construct ('pages').
@@ -17,7 +17,7 @@ const unsigned char NSECTS = 9;
 void pages_init() {
     FILE* fp;
     int npages;
-    char sect;
+    unsigned char sect;
     int page_idx;
     char tok_delim[2] = " ";
     char cmd[] = "man -k . -s    2>/dev/null | sort";
@@ -34,9 +34,9 @@ void pages_init() {
     NPAGES = npages;
     pclose(fp);
 
-    // Allocate one additional element - the overhead
-    // is worth the convenience of being able to address
-    // by actual section number!
+    /* Allocate one additional element - the overhead
+     * is worth the convenience of being able to address
+     * by actual section number! */
     SECT = malloc((NSECTS + 1) * sizeof(Page*));
 
     page_idx = 0;

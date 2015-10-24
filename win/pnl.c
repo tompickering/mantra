@@ -15,7 +15,7 @@ void pnl_init_all() {
     Win* win;
 
     win = wins[WIN_IDX_BOOKPNL];
-    //FIXME: Handle field dimensions properly.
+    /* FIXME: Handle field dimensions properly */
     bookpnl_field_bookmark = new_field(1, 10, 2, 2, 0, 0);
     set_field_type(bookpnl_field_bookmark, TYPE_INTEGER, 0, 0, INT_MAX);
     set_field_back(bookpnl_field_bookmark, A_UNDERLINE);
@@ -39,7 +39,7 @@ void _save_bookmark() {
     form_driver(bookpnl_form, REQ_VALIDATION);
     bookmark = field_buffer(bookpnl_field_bookmark, 0);
     set_field_buffer(bookpnl_field_bookmark, 0, "");
-    // TODO: Save bookmark
+    /* TODO: Save bookmark */
     close_panel();
 }
 

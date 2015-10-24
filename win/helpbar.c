@@ -6,10 +6,11 @@
 const char helpstr[] = "/-Search   Space-Switch   o-Open   jk-Navigate   t-Tag   f-Filter";
 
 void draw_win_helpbar() {
-    int rows, cols;
+    int cols;
     int helplen, xoff;
     Win* win = wins[WIN_IDX_HELPBAR];
-    getmaxyx(win->win, rows, cols);
+    /* Use xoff here to prevent gcc  complaining about unused 'rows' var */
+    getmaxyx(win->win, xoff, cols);
     helplen = strlen(helpstr);
     xoff = (cols - helplen) >> 1;
     if (xoff > 0)

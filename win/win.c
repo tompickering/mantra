@@ -118,7 +118,7 @@ void win_clear_all() {
  */
 void win_cycle_active() {
     int idx;
-    for (idx = (win_act_idx + 1) % NWIN; idx != win_act_idx; idx = ++idx % NWIN) {
+    for (idx = (win_act_idx + 1) % NWIN; idx != win_act_idx; idx = (idx + 1) % NWIN) {
         if (wins[idx]->can_be_active) {
             win_act_idx = idx;
             break;
@@ -190,7 +190,7 @@ char* string_clean_buffer(char* buf, char* src, unsigned int len) {
  */
 void open_page(int sect, char* page, int line) {
     char* cmd;
-    int cmd_len = strlen(page) + 7; // len("man x " "\0")
+    int cmd_len = strlen(page) + 7; /* len("man x " "\0") */
     cmd = (char*) malloc(cmd_len * sizeof(char));
     strncpy(cmd, "man   ", 4);
     strcpy(cmd+6, page);

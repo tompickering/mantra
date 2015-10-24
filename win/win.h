@@ -31,6 +31,7 @@ extern int win_act_idx;
 extern int pnl_act_idx;
 
 void win_init_all();
+void pnl_init_all();
 void win_update(Win*, int, int, int, int);
 void win_clear_row(Win*, int);
 void win_clear_all();

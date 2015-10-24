@@ -3,7 +3,9 @@
 
 #include <ncurses.h>
 
+#include "file.h"
 #include "page.h"
+#include "input.h"
 #include "draw.h"
 #include "win/win.h"
 
@@ -35,7 +37,6 @@ void ncurses_close() {
 
 int main(int argc, char** argv) {
     int ch = 0;
-    int win_act;
     bool running = true;
 
     signal(SIGWINCH, handle_sigwinch);
@@ -60,4 +61,6 @@ int main(int argc, char** argv) {
         draw_screen();
     } while(running);
     ncurses_close();
+
+    return 0;
 }

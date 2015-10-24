@@ -19,13 +19,14 @@ void win_page_show(Win* win) {
     int r = 1;
     int c = 2;
     int col_pair;
-    int name_len;
     int page_off = _page_start;
-    char sect[2]; sect[1] = '\0';
     Page* page;
     int max_desc_len;
     char* name;
     char* desc;
+    char sect[2];
+
+    sect[1] = '\0';
 
     _MAX_NAME_LEN = win->c / 3;
     max_desc_len = win->c - _MAX_NAME_LEN - 7;
@@ -124,9 +125,7 @@ void _open_page() {
 }
 
 void input_win_pages(int ch) {
-    int i;
     bool down;
-    Win* win = wins[WIN_IDX_PAGES];
     switch (ch) {
         case K_FWD:
         case K_BACK:
