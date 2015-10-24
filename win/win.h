@@ -18,6 +18,7 @@ typedef struct _Win {
 
 extern const int WIN_COL_PAIR_NORMAL;
 extern const int WIN_COL_PAIR_ACTIVE;
+extern const int WIN_COL_PAIR_PANELS;
 
 extern const int WIN_IDX_BOOKMARKS;
 extern const int WIN_IDX_PAGES;

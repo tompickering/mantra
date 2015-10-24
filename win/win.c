@@ -9,6 +9,7 @@
 
 const int WIN_COL_PAIR_NORMAL = 0;
 const int WIN_COL_PAIR_ACTIVE = 1;
+const int WIN_COL_PAIR_PANELS = 2;
 
 const int WIN_IDX_BOOKMARKS = 0;
 const int WIN_IDX_PAGES     = 1;
@@ -57,6 +58,7 @@ void win_init_all() {
 
     init_pair(WIN_COL_PAIR_NORMAL, COLOR_WHITE, COLOR_BLACK);
     init_pair(WIN_COL_PAIR_ACTIVE, COLOR_GREEN, COLOR_BLACK);
+    init_pair(WIN_COL_PAIR_PANELS, COLOR_BLUE , COLOR_BLACK);
     win_act_idx = WIN_IDX_BOOKMARKS;
     pnl_act_idx = -1;
 
@@ -132,7 +134,10 @@ int win_active() {
 
 void win_draw_border(Win* win) {
     int col_pair = WIN_COL_PAIR_NORMAL;
-    if (wins[win_act_idx] == win)
+    Win* pnl = active_pnl();
+    if (win == pnl)
+        col_pair = WIN_COL_PAIR_PANELS;
+    else if (wins[win_act_idx] == win)
         col_pair = WIN_COL_PAIR_ACTIVE;
     wattron(win->win, COLOR_PAIR(col_pair));
     box(win->win, 0, 0);
