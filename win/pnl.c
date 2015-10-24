@@ -47,6 +47,10 @@ void input_win_bookpnl(int ch) {
         case K_RETURN:
             _save_bookmark();
             break;
+        case KEY_BACKSPACE:
+            form_driver(bookpnl_form, REQ_LEFT_CHAR);
+            form_driver(bookpnl_form, REQ_DEL_CHAR);
+            break;
         default:
             form_driver(bookpnl_form, ch);
     }
