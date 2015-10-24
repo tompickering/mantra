@@ -34,10 +34,18 @@ void draw_win_bookpnl() {
     wrefresh(win->win);
 }
 
+void _save_bookmark() {
+    char* bookmark;
+    form_driver(bookpnl_form, REQ_VALIDATION);
+    bookmark = field_buffer(bookpnl_field_bookmark, 0);
+    // TODO: Save bookmark
+    close_panel();
+}
+
 void input_win_bookpnl(int ch) {
     switch (ch) {
         case K_RETURN:
-            close_panel();
+            _save_bookmark();
             break;
         default:
             form_driver(bookpnl_form, ch);
