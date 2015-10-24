@@ -38,6 +38,7 @@ void _save_bookmark() {
     char* bookmark;
     form_driver(bookpnl_form, REQ_VALIDATION);
     bookmark = field_buffer(bookpnl_field_bookmark, 0);
+    set_field_buffer(bookpnl_field_bookmark, 0, "");
     // TODO: Save bookmark
     close_panel();
 }
