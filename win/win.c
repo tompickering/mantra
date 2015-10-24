@@ -18,6 +18,7 @@ const int NWIN              = 4;
 
 Win** wins;
 int win_act_idx;
+int pnl_act_idx;
 
 /**
  * Default input handler for windows. It should never be called,
@@ -57,6 +58,7 @@ void win_init_all() {
     init_pair(WIN_COL_PAIR_NORMAL, COLOR_WHITE, COLOR_BLACK);
     init_pair(WIN_COL_PAIR_ACTIVE, COLOR_GREEN, COLOR_BLACK);
     win_act_idx = WIN_IDX_BOOKMARKS;
+    pnl_act_idx = -1;
 
     update_panels();
     doupdate();
@@ -184,4 +186,19 @@ void open_page(int sect, char* page, int line) {
     endwin();
     refresh();
     win_clear_all();
+}
+
+void open_panel(int pnl_idx) {
+    Win* win = wins[pnl_idx];
+    pnl_act_idx = pnl_idx;
+    show_panel(win->pnl);
+}
+
+void close_panel() {
+    Win* win;
+    if (pnl_act_idx >= 0) {
+        win = wins[pnl_act_idx];
+        hide_panel(win->pnl);
+        pnl_act_idx = -1;
+    }
 }

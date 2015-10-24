@@ -27,6 +27,7 @@ extern const int NWIN;
 
 extern Win** wins;
 extern int win_act_idx;
+extern int pnl_act_idx;
 
 void win_init_all();
 void win_update(Win*, int, int, int, int);
@@ -47,5 +48,7 @@ void input_win_bookpnl(int);
 Win* active_win();
 char* string_clean_buffer(char*, char*, unsigned int);
 void open_page(int, char*, int);
+void open_panel(int);
+void close_panel(void);
 
 #endif
