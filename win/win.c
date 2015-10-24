@@ -62,6 +62,8 @@ void win_init_all() {
     win_act_idx = WIN_IDX_BOOKMARKS;
     pnl_act_idx = -1;
 
+    pnl_init_all();
+
     update_panels();
     doupdate();
 }
