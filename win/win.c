@@ -157,6 +157,12 @@ Win* active_win() {
     return wins[win_act_idx];
 }
 
+Win* active_pnl() {
+    if (pnl_act_idx < 0)
+        return NULL;
+    return wins[pnl_act_idx];
+}
+
 /**
  * Copy a string into a buffer to a max of len bytes.
  * Furthermore, ensure that the buffer is clean and null-terminated.

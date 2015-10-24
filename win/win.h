@@ -46,6 +46,7 @@ void input_win_bookmarks(int);
 void input_win_pages(int);
 void input_win_bookpnl(int);
 Win* active_win();
+Win* active_pnl();
 char* string_clean_buffer(char*, char*, unsigned int);
 void open_page(int, char*, int);
 void open_panel(int);

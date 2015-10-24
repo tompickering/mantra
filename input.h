@@ -12,6 +12,7 @@
 #define K_FWD     'f' + CTRL
 #define K_BACK    'b' + CTRL
 #define K_BOOKPNL 'b'
+#define K_RETURN  '\n'
 
 #include <stdbool.h>
 
