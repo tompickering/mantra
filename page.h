@@ -10,6 +10,7 @@ struct _Page {
 };
 
 extern Page* pages;
+extern Page** SECT;
 extern unsigned int NPAGES;
 extern const unsigned char NSECTS;
 

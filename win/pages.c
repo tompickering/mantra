@@ -125,6 +125,7 @@ void _open_page() {
 }
 
 void input_win_pages(int ch) {
+    unsigned char sect;
     bool down;
     switch (ch) {
         case K_FWD:
@@ -144,6 +145,19 @@ void input_win_pages(int ch) {
             break;
         case K_OPEN:
             _open_page();
+            break;
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            sect = ch - '0';
+            _page_start = (size_t) (SECT[sect] - pages);
+            _current_row = 0;
             break;
     }
 }
