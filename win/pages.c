@@ -180,3 +180,13 @@ void input_win_pages(int ch) {
             break;
     }
 }
+
+void update_win_pages() {
+    Win* win = wins[WIN_IDX_PAGES];
+    int r = win->r;
+
+    if (_current_row > r - 3) {
+        _page_start += _current_row - r + 3;
+        _current_row = r - 3;
+    }
+}

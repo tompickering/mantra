@@ -33,6 +33,7 @@ typedef struct _Win {
     PANEL* pnl;
     void (*draw)();
     void (*input)(int);
+    void (*update)();
 } Win;
 
 extern const int WIN_COL_PAIR_NORMAL;
@@ -66,6 +67,7 @@ void draw_win_bookpnl();
 void input_win_bookmarks(int);
 void input_win_pages(int);
 void input_win_bookpnl(int);
+void update_win_pages();
 Win* active_win();
 Win* active_pnl();
 char* string_clean_buffer(char*, char*, unsigned int);

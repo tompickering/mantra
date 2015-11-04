@@ -68,6 +68,11 @@ void win_init_all() {
     wins[WIN_IDX_HELPBAR  ]->input = input_default;
     wins[WIN_IDX_BOOKPNL  ]->input = input_win_bookpnl;
 
+    wins[WIN_IDX_BOOKMARKS]->update = NULL;
+    wins[WIN_IDX_PAGES    ]->update = update_win_pages;
+    wins[WIN_IDX_HELPBAR  ]->update = NULL;
+    wins[WIN_IDX_BOOKPNL  ]->update = NULL;
+
     wins[WIN_IDX_BOOKMARKS]->can_be_active = true;
     wins[WIN_IDX_PAGES    ]->can_be_active = true;
     wins[WIN_IDX_HELPBAR  ]->can_be_active = false;
@@ -94,6 +99,9 @@ void win_update(Win* window, int x, int y, int r, int c) {
     WINDOW* win = window->win;
     wresize(win, r, c);
     mvwin(win, y, x);
+    window->r = r;
+    window->c = c;
+    if (window->update) window->update();
 }
 
 /**
