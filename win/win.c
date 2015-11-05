@@ -224,9 +224,9 @@ void open_page(int sect, char* page, int line) {
     cmd[4] = '0' + sect;
     cmd[5] = ' ';
     cmd[cmd_len - 1] = '\0';
+    endwin();
     system(cmd);
     free(cmd);
-    endwin();
     refresh();
     win_clear_all();
 }
