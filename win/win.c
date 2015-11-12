@@ -26,6 +26,8 @@
 #include <ncurses.h>
 #include <panel.h>
 
+#include "../pty.h"
+
 const int WIN_COL_PAIR_NORMAL = 0;
 const int WIN_COL_PAIR_ACTIVE = 1;
 const int WIN_COL_PAIR_PANELS = 2;
@@ -224,8 +226,10 @@ void open_page(int sect, char* page, int line) {
     cmd[4] = '0' + sect;
     cmd[5] = ' ';
     cmd[cmd_len - 1] = '\0';
+
     endwin();
-    system(cmd);
+    run_pty(cmd);
+
     free(cmd);
     refresh();
     win_clear_all();
