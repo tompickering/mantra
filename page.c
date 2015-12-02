@@ -81,7 +81,6 @@ void pages_init() {
             page->desc = (char*) malloc((toklen+1) * sizeof(char));
             strcpy(page->desc, tok);
         }
+        pclose(fp);
     }
-
-    pclose(fp);
 }
