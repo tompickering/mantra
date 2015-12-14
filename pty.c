@@ -46,6 +46,8 @@
 #include <stdio.h>
 #include <termios.h>
 
+#include "error.h"
+
 int init_tty_raw(int fd, struct termios* tty_base_attrs) {
     struct termios tty_raw_attrs;
 
@@ -80,16 +82,16 @@ void run_pty(char* cmd) {
 
     master = open("/dev/ptmx", O_RDWR | O_NOCTTY);
 
-    if (master == -1 || ptsname(master) == NULL)
-        exit(1);
+    if (master == -1)
+        die("Unable to open pty master");
     if (tcgetattr(STDIN_FILENO, &tty_attrs) == -1)
-        exit(1);
+        die(NULL);
     if (ioctl(STDIN_FILENO, TIOCGWINSZ, &ws) < 0)
-        exit(1);
+        die(NULL);
 
     child_pid = fork();
     if (child_pid == -1)
-        exit(1);
+        die(NULL);
 
     if (child_pid == 0) {
         int slave;
@@ -102,20 +104,23 @@ void run_pty(char* cmd) {
         unlockpt(master);
         slave = open(ptsname(master), O_RDWR);
 
+        if (slave == -1)
+            die(NULL);
+
         /* Set tty attributes */
         if (tcsetattr(slave, TCSANOW, &tty_attrs) == -1)
-            exit(1);
+            die(NULL);
 
         /* Set window size */
         if (ioctl(slave, TIOCSWINSZ, &ws) == -1)
-            exit(1);
+            die(NULL);
 
         /* Hook standard file descriptors up
          * to the master/slave interface */
         if (dup2(slave, STDOUT_FILENO) == -1
          || dup2(slave, STDIN_FILENO)  == -1
          || dup2(slave, STDERR_FILENO) == -1)
-            exit(1);
+            die(NULL);
 
         /* No longer needed - we now have the
          * duplicate descriptors */
@@ -129,7 +134,7 @@ void run_pty(char* cmd) {
         execlp(shell, shell, "-c", cmd, NULL);
 
         /* Only reached if execlp fails */
-        exit(1);
+        die(NULL);
 
     } else {
         char buf[PTY_IO_BUF_SZ];
@@ -139,7 +144,7 @@ void run_pty(char* cmd) {
 
         /* Put tty into raw mode */
         if (init_tty_raw(STDIN_FILENO, &tty_attrs) != 0)
-            exit(1);
+            die(NULL);
 
         while (1) {
 
@@ -151,14 +156,14 @@ void run_pty(char* cmd) {
 
             /* Filter descriptors out of fd_set if no input to read */
             if (select(master + 1, &input_fd_set, NULL, NULL, NULL) == -1)
-                exit(1);
+                die(NULL);
 
             /* stdin -> pty */
             if (FD_ISSET(STDIN_FILENO, &input_fd_set)) {
                 bytes_read = read(STDIN_FILENO, buf2, PTY_IO_BUF_SZ);
                 if (bytes_read > 0) {
                     if (write(master, buf2, bytes_read) != bytes_read)
-                        exit(1);
+                        die(NULL);
                 }
             }
 
@@ -167,7 +172,7 @@ void run_pty(char* cmd) {
                 bytes_read = read(master, buf, PTY_IO_BUF_SZ);
                 if (bytes_read > 0) {
                     if (write(STDOUT_FILENO, buf, bytes_read) != bytes_read)
-                        exit(1);
+                        die(NULL);
                 }
             }
 
@@ -180,7 +185,7 @@ void run_pty(char* cmd) {
 
         /* Restore original tty settings */
         if (tcsetattr(STDIN_FILENO, TCSADRAIN, &tty_attrs) == -1)
-            exit(1);
+            die(NULL);
 
     }
 }
