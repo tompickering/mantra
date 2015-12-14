@@ -40,6 +40,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/wait.h>
 #include <sys/select.h>
 #include <sys/ioctl.h>
