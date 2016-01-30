@@ -75,7 +75,7 @@ int init_tty_raw(int fd, struct termios* tty_base_attrs) {
     return 0;
 }
 
-void run_pty(char* cmd) {
+void run_pty(char* cmd, char* input) {
     struct termios tty_attrs;
     struct winsize ws;
     pid_t child_pid;
@@ -146,6 +146,11 @@ void run_pty(char* cmd) {
         /* Put tty into raw mode */
         if (init_tty_raw(STDIN_FILENO, &tty_attrs) != 0)
             die(NULL);
+
+        /* Run any specified input to our command */
+        if (input != NULL)
+            if (write(master, input, strlen(input)) != strlen(input))
+                die(NULL);
 
         while (1) {
 
