@@ -30,6 +30,33 @@
 #include <gdbm.h>
 
 /**
+ * Load a value into a datum struct.
+ */
+void _datum(datum* d, char* value) {
+    d->dptr = value;
+    d->dsize = strlen(value);
+}
+
+/**
+ * Create a bookmark entry in the DB.
+ */
+int add_bookmark(Page* page, char* line, bool update) {
+    /* TODO: update facility */
+    datum key;
+    datum val;
+    char* sectpage = (char*) malloc(strlen(page) + 3);
+    sectpage[0] = page->sect;
+    sectpage[1] = ':';
+    strcpy(sectpage + 2, page->name);
+    sectpage[strlen(page->name) + 3] = '\0';
+    _datum(&key, sectpage);
+    _datum(&val, line);
+    if (gdbm_store(db, key, val, GDBM_INSERT))
+        return -1;
+    return 0;
+}
+
+/**
  * Create and open a database file to store bookmarks.
  */
 void db_init(char* dir) {

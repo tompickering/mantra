@@ -19,13 +19,16 @@
 
 #include "win.h"
 
+#include <string.h>
 #include <limits.h>
 
 #include <ncurses.h>
 #include <form.h>
 
+#include "pages.h"
 #include "../input.h"
 #include "../page.h"
+#include "../file.h"
 
 FORM* bookpnl_form;
 FIELD* bookpnl_field_bookmark;
@@ -57,8 +60,9 @@ void _save_bookmark() {
     char* bookmark;
     form_driver(bookpnl_form, REQ_VALIDATION);
     bookmark = field_buffer(bookpnl_field_bookmark, 0);
+    *(strchr(bookmark, ' ')) = '\0';
+    add_bookmark(get_current_page(), bookmark, false);
     set_field_buffer(bookpnl_field_bookmark, 0, "");
-    /* TODO: Save bookmark */
     close_panel();
 }
 

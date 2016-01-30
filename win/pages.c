@@ -17,6 +17,7 @@
  *                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#include "pages.h"
 #include "win.h"
 
 #include <stdlib.h>
@@ -33,6 +34,10 @@ int _current_sect = 0;
 int _prev_row = 0;
 int _page_start = 0;
 int _MAX_NAME_LEN = 20;
+
+Page* get_current_page() {
+    return &pages[_page_start + _current_row];
+}
 
 void win_page_show(Win* win) {
     int r = 1;

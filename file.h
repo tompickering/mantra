@@ -26,8 +26,12 @@
 #include <stdbool.h>
 #include <gdbm.h>
 
+#include "page.h"
+
 GDBM_FILE db;
 
+void _datum(datum*, char*);
+int add_bookmark(Page*, char*, bool);
 void db_init(char*);
 void file_init();
 
