@@ -61,7 +61,7 @@ void _save_bookmark() {
     form_driver(bookpnl_form, REQ_VALIDATION);
     bookmark = field_buffer(bookpnl_field_bookmark, 0);
     *(strchr(bookmark, ' ')) = '\0';
-    add_bookmark(get_current_page(), bookmark, false);
+    add_bookmark(get_current_page(), bookmark, true);
     set_field_buffer(bookpnl_field_bookmark, 0, "");
     close_panel();
 }

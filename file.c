@@ -38,10 +38,25 @@ void _datum(datum* d, char* value) {
 }
 
 /**
+ * Remove a bookmark entry from the DB.
+ */
+int rm_bookmark(Page* page) {
+    datum key;
+    char* sectpage = (char*) malloc(strlen(page->name) + 3);
+    sectpage[0] = '0' + page->sect;
+    sectpage[1] = ':';
+    strcpy(sectpage + 2, page->name);
+    sectpage[strlen(page->name) + 3] = '\0';
+    _datum(&key, sectpage);
+    if( gdbm_delete(db, key))
+        return -1;
+    return 0;
+}
+
+/**
  * Create a bookmark entry in the DB.
  */
 int add_bookmark(Page* page, char* line, bool update) {
-    /* TODO: update facility */
     datum key;
     datum val;
     char* sectpage = (char*) malloc(strlen(page->name) + 3);
@@ -51,8 +66,20 @@ int add_bookmark(Page* page, char* line, bool update) {
     sectpage[strlen(page->name) + 3] = '\0';
     _datum(&key, sectpage);
     _datum(&val, line);
-    if (gdbm_store(db, key, val, GDBM_INSERT))
+
+    if (gdbm_store(db, key, val, GDBM_INSERT)) {
+        /* If we couldn't add a record, this may be
+         * because the key exists. If update requested,
+         * remove the record and try again.
+         */
+        if (update) {
+            if (rm_bookmark(page))
+                return -1;
+            return add_bookmark(page, line, false);
+        }
         return -1;
+    }
+
     return 0;
 }
 
