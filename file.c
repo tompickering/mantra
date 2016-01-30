@@ -44,7 +44,7 @@ int add_bookmark(Page* page, char* line, bool update) {
     /* TODO: update facility */
     datum key;
     datum val;
-    char* sectpage = (char*) malloc(strlen(page) + 3);
+    char* sectpage = (char*) malloc(strlen(page->name) + 3);
     sectpage[0] = page->sect;
     sectpage[1] = ':';
     strcpy(sectpage + 2, page->name);
