@@ -20,10 +20,15 @@
 #ifndef GUARD_FILE_H
 #define GUARD_FILE_H
 
-#define MANTRA_HOME ".mantra"
+#define MANTRA_HOME ".mantra/"
+#define MANTRA_DB "bookmarks.db"
 
 #include <stdbool.h>
+#include <gdbm.h>
 
+GDBM_FILE db;
+
+void db_init(char*);
 void file_init();
 
 #endif

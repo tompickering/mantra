@@ -24,15 +24,29 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <gdbm.h>
 
 /**
- * Create ~/.mantra if it doesn't already exist, and chdir there.
- * Error out with a meaningful error message if not.
+ * Create and open a database file to store bookmarks.
+ */
+void db_init(char* dir) {
+    char* db_path = (char*) malloc(strlen(dir) + strlen(MANTRA_DB) + 1);
+    strcpy(db_path, dir);
+    strcpy(db_path + strlen(dir), MANTRA_DB);
+    db_path[strlen(dir) + strlen(MANTRA_DB)] = '\0';
+    db = gdbm_open(db_path, 0, GDBM_WRCREAT, 0644, NULL);
+}
+
+/**
+ * Create ~/.mantra if it doesn't already exist,
+ * and open a gdbm database for bookmarks.
  */
 void file_init() {
     char* usr_home = NULL;
+    char* mantra_home;
 
     usr_home = getenv("HOME");
 
@@ -47,6 +61,12 @@ void file_init() {
         exit(1);
     }
 
+    mantra_home = (char*) malloc(strlen(usr_home) + strlen(MANTRA_HOME) + 2);
+    strcpy(mantra_home, usr_home);
+    mantra_home[strlen(usr_home)] = '/';
+    strcpy(mantra_home + strlen(usr_home) + 1, MANTRA_HOME);
+    mantra_home[strlen(usr_home) + strlen(MANTRA_HOME) + 1] = '\0';
+
     errno = 0;
     mkdir(MANTRA_HOME, 0700);
 
@@ -54,4 +74,6 @@ void file_init() {
         fprintf(stderr, "Error: Unable to create directory %s.\n", MANTRA_HOME);
         exit(1);
     }
+
+    db_init(mantra_home);
 }
