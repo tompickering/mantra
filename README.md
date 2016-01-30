@@ -18,3 +18,13 @@ $ man bash | wc -l
 *Promptly forgets*
 
 For those interested, the specific mantra referred to by the name is 'RTFM', which of course stands for 'Read the Full Manual' ;)
+
+## Requirements
+
+libgdbm-dev
+libncursesw5-dev
+
+## Installation
+
+make
+sudo make install
