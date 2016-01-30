@@ -21,10 +21,12 @@ For those interested, the specific mantra referred to by the name is 'RTFM', whi
 
 ## Requirements
 
-libgdbm-dev
-libncursesw5-dev
+libgdbm-dev  
+libncursesw5-dev  
 
 ## Installation
 
-make
-sudo make install
+```
+$ make
+$ sudo make install
+```
