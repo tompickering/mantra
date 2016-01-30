@@ -83,9 +83,6 @@ void file_init() {
     if (usr_home == NULL) {
         fprintf(stderr, "Error: Unable to determine user home directory.\n");
         exit(1);
-    } else if (chdir(usr_home) != 0) {
-        fprintf(stderr, "Error: Unable to change to user home directory.\n");
-        exit(1);
     }
 
     mantra_home = (char*) malloc(strlen(usr_home) + strlen(MANTRA_HOME) + 2);
