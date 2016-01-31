@@ -29,9 +29,9 @@
 #include "../file.h"
 
 int _current_row_bm = 0;
-Bookmark* _current_bm = NULL;
 int _prev_row_bm = 0;
-int _bm_start = 0;
+Bookmark* _bm_start = NULL;
+Bookmark* _current_bm = NULL;
 int _MAX_NAME_LEN_BM = 20;
 
 void win_bookmarks_show(Win* win) {
@@ -39,12 +39,13 @@ void win_bookmarks_show(Win* win) {
     int r = 1;
     int c = 2;
     int col_pair;
-    Bookmark* bm = bookmarks;
+    Bookmark* bm = _bm_start;
     int max_desc_len;
     char* name;
     char* desc;
     char sect[2];
     Page* page;
+    int i;
 
     sect[1] = '\0';
 
@@ -52,6 +53,8 @@ void win_bookmarks_show(Win* win) {
     max_desc_len = win->c - _MAX_NAME_LEN_BM - 7;
     name = malloc((_MAX_NAME_LEN_BM + 1) * sizeof(char));
     desc = malloc((max_desc_len + 1) * sizeof(char));
+
+    if (_bm_start == NULL) _bm_start = bookmarks;
 
     for (; bm != NULL && r < win->r - 1; ++r) {
         page = bm->page;
@@ -73,6 +76,13 @@ void win_bookmarks_show(Win* win) {
         _prev_row_bm = _current_row_bm;
     }
 
+    /* Recalculate _current_bm */
+    _current_bm = _bm_start;
+    for (i = 0; i < _current_row_bm; ++i) {
+        _current_bm = _current_bm->next;
+        if (_current_bm == NULL) break;
+    }
+
     free(name);
     free(desc);
 }
@@ -84,5 +94,59 @@ void draw_win_bookmarks() {
     wrefresh(win->win);
 }
 
+/* TODO */
+void _page_bm(bool down) {}
+
+void _navigate_bm(bool down) {
+    Win* win = wins[WIN_IDX_BOOKMARKS];
+    if (down) {
+        if (_current_row_bm + 3 < win->r) {
+            ++_current_row_bm;
+        } else if (_bm_start->next && _current_bm->next) {
+            _bm_start = _bm_start->next;
+        }
+    } else {
+        if (_current_row_bm == 0) {
+            if (_bm_start->prev) {
+                _bm_start = _bm_start->prev;
+            }
+        } else {
+            --_current_row_bm;
+        }
+    }
+}
+
+/* TODO */
+void _jump_to_end_bm(bool down) {}
+
+void _open_bm() {
+    if (_current_bm != NULL) {
+        open_page(_current_bm->page->sect,
+                  _current_bm->page->name,
+                  _current_bm->line);
+    }
+}
+
 void input_win_bookmarks(int ch) {
+    bool down;
+    switch (ch) {
+        case K_FWD:
+        case K_BACK:
+            down = (ch == K_BACK) ? false : true;
+            _page_bm(down);
+            break;
+        case K_UP:
+        case K_DOWN:
+            down = (ch == K_UP) ? false : true;
+            _navigate_bm(down);
+            break;
+        case K_HOME:
+        case K_END:
+            down = (ch == K_HOME) ? false : true;
+            _jump_to_end_bm(down);
+            break;
+        case K_OPEN:
+            _open_bm();
+            break;
+    }
 }

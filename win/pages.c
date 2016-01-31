@@ -145,7 +145,7 @@ void _page(bool down) {
 
 void _open_page() {
     if (_current_name != NULL && _current_sect > 0)
-        open_page(_current_sect, _current_name, 0);
+        open_page(_current_sect, _current_name, "0");
 }
 
 void input_win_pages(int ch) {

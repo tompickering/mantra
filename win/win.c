@@ -22,7 +22,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include <math.h>
 
 #include <ncurses.h>
 #include <panel.h>
@@ -218,7 +217,7 @@ char* string_clean_buffer(char* buf, char* src, unsigned int len) {
 /**
  * Spawn a 'man' process displaying the requested page.
  */
-void open_page(int sect, char* page, int line) {
+void open_page(int sect, char* page, char* line) {
     char* cmd;
     int line_str_len;
     char* line_str = "0g";
@@ -231,13 +230,11 @@ void open_page(int sect, char* page, int line) {
     cmd[cmd_len - 1] = '\0';
 
     if (line) {
-        /* Calculate how many digits long the string
-         * representation of the line number will be. */
-        line_str_len = ((int) log10((double) line)) + 1;
+        line_str_len = strlen(line);
 
         /* 2 extra characters for 'g' and \0 */
         line_str = (char*) malloc(line_str_len + 2);
-        sprintf(line_str, "%d", line);
+        strcpy(line_str, line);
         line_str[line_str_len] = 'g';
         line_str[line_str_len + 1] = '\0';
     }
