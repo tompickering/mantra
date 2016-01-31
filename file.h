@@ -45,5 +45,6 @@ void _datum(datum*, char*);
 int add_bookmark(Page*, char*, bool);
 void db_init(char*);
 void file_init();
+void file_close();
 
 #endif

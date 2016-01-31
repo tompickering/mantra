@@ -86,7 +86,7 @@ void pages_init() {
 }
 
 Page* search_page(char sect, char* name) {
-    Page* inspect = SECT[sect];
+    Page* inspect = SECT[(unsigned int) sect];
     while ((inspect++)->sect == sect) {
         if (!strcmp(name, inspect->name))
             return inspect;
