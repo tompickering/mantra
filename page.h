@@ -34,5 +34,6 @@ extern unsigned int NPAGES;
 extern const unsigned char NSECTS;
 
 void pages_init();
+Page* search_page(char, char*);
 
 #endif

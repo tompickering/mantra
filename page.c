@@ -84,3 +84,12 @@ void pages_init() {
         pclose(fp);
     }
 }
+
+Page* search_page(char sect, char* name) {
+    Page* inspect = SECT[sect];
+    while ((inspect++)->sect == sect) {
+        if (!strcmp(name, inspect->name))
+            return inspect;
+    }
+    return NULL;
+}

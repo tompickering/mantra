@@ -60,11 +60,16 @@ int main(int argc, char** argv) {
 
     signal(SIGWINCH, handle_sigwinch);
 
-    file_init();
     printf("Loading pages...\n");
     pages_init();
+
+    printf("Loading bookmarks...\n");
+    file_init();
+
+    printf("Initialising...\n");
     ncurses_init();
     win_init_all();
+
     do {
         ch = getch();
         if (ch == -1) {

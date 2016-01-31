@@ -28,6 +28,17 @@
 
 #include "page.h"
 
+typedef struct _Bookmark Bookmark;
+
+struct _Bookmark {
+    Page* page;
+    char* line;
+    Bookmark* prev;
+    Bookmark* next;
+};
+
+extern Bookmark* bookmarks;
+
 GDBM_FILE db;
 
 void _datum(datum*, char*);

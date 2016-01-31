@@ -29,12 +29,50 @@
 #include <errno.h>
 #include <gdbm.h>
 
+Bookmark* bookmarks = NULL;
+
 /**
  * Load a value into a datum struct.
  */
 void _datum(datum* d, char* value) {
     d->dptr = value;
     d->dsize = strlen(value);
+}
+
+/**
+ * Load bookmarks from DB.
+ */
+void bookmarks_init() {
+    Bookmark* current_bm = bookmarks;
+    Bookmark* prev_bm = NULL;
+    Page* page;
+    datum key;
+    datum val;
+
+    key = gdbm_firstkey(db);
+
+    while (key.dptr != NULL) {
+        page = search_page(key.dptr[0] - '0', key.dptr + 2);
+
+        if (page != NULL) {
+            val = gdbm_fetch(db, key);
+            current_bm = (Bookmark*) malloc(sizeof(Bookmark));
+            current_bm->page = page;
+            current_bm->line = val.dptr;
+            if (prev_bm != NULL) {
+                current_bm->prev = prev_bm;
+                prev_bm->next = current_bm;
+            }
+        } else {
+            /* TODO: Flag to clear up all missing marks? */
+            fprintf(stderr, "Warning: Bookmarked page '%s' not found.\n", key.dptr + 2);
+        }
+
+        key = gdbm_nextkey(db, key);
+    }
+
+    if (bookmarks != NULL) bookmarks->prev = NULL;
+    if (current_bm != NULL) current_bm->next = NULL;
 }
 
 /**
@@ -127,4 +165,5 @@ void file_init() {
     }
 
     db_init(mantra_home);
+    bookmarks_init();
 }

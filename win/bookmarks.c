@@ -24,8 +24,12 @@
 #include "../input.h"
 #include "../page.h"
 
+void win_bookmarks_show(Win* win) {
+}
+
 void draw_win_bookmarks() {
     Win* win = wins[WIN_IDX_BOOKMARKS];
+    win_bookmarks_show(win);
     win_draw_border(win);
     wrefresh(win->win);
 }
