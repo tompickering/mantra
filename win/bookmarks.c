@@ -78,7 +78,7 @@ void win_bookmarks_show(Win* win) {
 
     /* Recalculate _current_bm */
     _current_bm = _bm_start;
-    for (i = 0; i < _current_row_bm; ++i) {
+    for (i = 0; _current_bm != NULL && i < _current_row_bm; ++i) {
         _current_bm = _current_bm->next;
         if (_current_bm == NULL) break;
     }
@@ -100,14 +100,14 @@ void _page_bm(bool down) {}
 void _navigate_bm(bool down) {
     Win* win = wins[WIN_IDX_BOOKMARKS];
     if (down) {
-        if (_current_row_bm + 3 < win->r) {
+        if (_current_bm && _current_bm->next && _current_row_bm + 3 < win->r) {
             ++_current_row_bm;
-        } else if (_bm_start->next && _current_bm->next) {
+        } else if (_bm_start && _bm_start->next && _current_bm->next) {
             _bm_start = _bm_start->next;
         }
     } else {
         if (_current_row_bm == 0) {
-            if (_bm_start->prev) {
+            if (_bm_start && _bm_start->prev) {
                 _bm_start = _bm_start->prev;
             }
         } else {
