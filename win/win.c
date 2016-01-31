@@ -221,7 +221,7 @@ char* string_clean_buffer(char* buf, char* src, unsigned int len) {
 void open_page(int sect, char* page, int line) {
     char* cmd;
     int line_str_len;
-    char* line_str = NULL;
+    char* line_str = "0g";
     int cmd_len = strlen(page) + 7; /* len("man x " "\0") */
     cmd = (char*) malloc(cmd_len * sizeof(char));
     strncpy(cmd, "man   ", 4);
