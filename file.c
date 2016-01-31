@@ -57,12 +57,14 @@ void bookmarks_init() {
         if (page != NULL) {
             val = gdbm_fetch(db, key);
             current_bm = (Bookmark*) malloc(sizeof(Bookmark));
+            if (bookmarks == NULL) bookmarks = current_bm;
             current_bm->page = page;
             current_bm->line = val.dptr;
             if (prev_bm != NULL) {
                 current_bm->prev = prev_bm;
                 prev_bm->next = current_bm;
             }
+            prev_bm = current_bm;
         } else {
             /* TODO: Flag to clear up all missing marks? */
             fprintf(stderr, "Warning: Bookmarked page '%s' not found.\n", key.dptr + 2);
