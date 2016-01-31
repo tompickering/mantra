@@ -167,3 +167,19 @@ void file_init() {
     db_init(mantra_home);
     bookmarks_init();
 }
+
+/**
+ * Cleanup.
+ */
+void file_close() {
+    Bookmark* head = bookmarks;
+
+    while (bookmarks != NULL) {
+        bookmarks = bookmarks->next;
+        free(head->line);
+        free(head);
+        head = bookmarks;
+    }
+
+    gdbm_close(db);
+}

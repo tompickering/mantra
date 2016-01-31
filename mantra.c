@@ -86,5 +86,7 @@ int main(int argc, char** argv) {
     } while(running);
     ncurses_close();
 
+    file_close();
+
     return 0;
 }
