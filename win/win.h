@@ -70,6 +70,7 @@ void input_win_bookmarks(int);
 void input_win_pages(int);
 void input_win_bookpnl(int);
 void update_win_pages();
+void update_win_bookmarks();
 Win* active_win();
 Win* active_pnl();
 char* string_clean_buffer(char*, char*, unsigned int);

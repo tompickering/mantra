@@ -186,3 +186,7 @@ void input_win_bookmarks(int ch) {
             break;
     }
 }
+
+/* TODO */
+void update_win_bookmarks() {
+}
