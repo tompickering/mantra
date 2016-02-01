@@ -78,6 +78,25 @@ void bookmarks_init() {
 }
 
 /**
+ * Remove a bookmark from the linked list.
+ */
+void rm_bookmark(Page* page) {
+    Bookmark* bm = bookmarks;
+
+    if (bm != NULL)
+        while (bm->next && bm->page != page)
+            bm = bm->next;
+
+    if (bm != NULL) {
+        if (bm->prev != NULL) bm->prev->next = bm->next;
+        if (bm->next != NULL) bm->next->prev = bm->prev;
+        if (bm == bookmarks) bookmarks = bm->next;
+        free(bm->line);
+        free(bm);
+    }
+}
+
+/**
  * Insert a bookmark at the end of the linked list.
  */
 void insert_bookmark(Page* page, char* line) {
@@ -101,7 +120,7 @@ void insert_bookmark(Page* page, char* line) {
 /**
  * Remove a bookmark entry from the DB.
  */
-int rm_bookmark(Page* page) {
+int delete_bookmark(Page* page) {
     datum key;
     char* sectpage = (char*) malloc(strlen(page->name) + 3);
     sectpage[0] = '0' + page->sect;
@@ -109,8 +128,11 @@ int rm_bookmark(Page* page) {
     strcpy(sectpage + 2, page->name);
     sectpage[strlen(page->name) + 3] = '\0';
     _datum(&key, sectpage);
-    if( gdbm_delete(db, key))
+
+    if (gdbm_delete(db, key))
         return -1;
+
+    rm_bookmark(page);
     return 0;
 }
 
@@ -134,7 +156,7 @@ int add_bookmark(Page* page, char* line, bool update) {
          * remove the record and try again.
          */
         if (update) {
-            if (rm_bookmark(page))
+            if (delete_bookmark(page))
                 return -1;
             return add_bookmark(page, line, false);
         }
