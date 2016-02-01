@@ -94,8 +94,27 @@ void draw_win_bookmarks() {
     wrefresh(win->win);
 }
 
-/* TODO */
-void _page_bm(bool down) {}
+void _page_bm(bool down) {
+    Win* win = wins[WIN_IDX_BOOKMARKS];
+    Bookmark* bm = _bm_start;
+    int i;
+
+    if (down) {
+        /* Search ahead; if the list comes to an end soon,
+         * don't jump forward a whole page. */
+        for (i = 0; i < ((win->r - 2) << 1) - 1; ++i) {
+            bm = bm->next;
+            if (bm == NULL) break;
+        }
+
+        i -= (win->r - 2);
+        for (; _bm_start->next != NULL && i >= 0; --i)
+            _bm_start = _bm_start->next;
+    } else {
+        for (i = 0; _bm_start->prev != NULL && i < win->r - 2; ++i)
+            _bm_start = _bm_start->prev;
+    }
+}
 
 void _navigate_bm(bool down) {
     Win* win = wins[WIN_IDX_BOOKMARKS];
