@@ -78,6 +78,27 @@ void bookmarks_init() {
 }
 
 /**
+ * Insert a bookmark at the end of the linked list.
+ */
+void insert_bookmark(Page* page, char* line) {
+    Bookmark* bm = (Bookmark*) malloc(sizeof(Bookmark));
+    Bookmark* last_bm = bookmarks;
+
+    if (last_bm != NULL)
+        while (last_bm->next)
+            last_bm = last_bm->next;
+
+    bm->page = page;
+    bm->line = (char*) malloc(strlen(line) + 1);
+    strcpy(bm->line, line);
+    bm->prev = last_bm;
+    bm->next = NULL;
+    if (last_bm != NULL) last_bm->next = bm;
+
+    bookmarks = bm;
+}
+
+/**
  * Remove a bookmark entry from the DB.
  */
 int rm_bookmark(Page* page) {
@@ -119,6 +140,8 @@ int add_bookmark(Page* page, char* line, bool update) {
         }
         return -1;
     }
+
+    insert_bookmark(page, line);
 
     return 0;
 }
