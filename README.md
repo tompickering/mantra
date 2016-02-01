@@ -17,8 +17,6 @@ $ man bash | wc -l
 "Ah, that looks like a cool utility! I'll have to remember to read up on that later."
 *Promptly forgets*
 
-For those interested, the specific mantra referred to by the name is 'RTFM', which of course stands for 'Read the Full Manual' ;)
-
 ## Requirements
 
 libgdbm-dev  
@@ -30,3 +28,5 @@ libncursesw5-dev
 $ make
 $ sudo make install
 ```
+
+For those interested, the specific mantra referred to by the name is 'RTFM', which of course stands for 'Read the Full Manual' ;)
