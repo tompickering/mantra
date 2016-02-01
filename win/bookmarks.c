@@ -135,8 +135,25 @@ void _navigate_bm(bool down) {
     }
 }
 
-/* TODO */
-void _jump_to_end_bm(bool down) {}
+void _jump_to_end_bm(bool end) {
+    Win* win = wins[WIN_IDX_BOOKMARKS];
+    if (end) {
+        int i;
+        _current_row_bm = win->r - 3;
+        if (_bm_start == NULL) return;
+
+        /* Fast-forward to end... */
+        while (_bm_start->next != NULL)
+            _bm_start = _bm_start->next;
+
+        /* ...And rewind! */
+        for (i = 0; _bm_start->prev != NULL && i < win->r - 3; ++i)
+            _bm_start = _bm_start->prev;
+    } else {
+        _current_row_bm = 0;
+        _bm_start = bookmarks;
+    }
+}
 
 void _open_bm() {
     if (_current_bm != NULL) {
