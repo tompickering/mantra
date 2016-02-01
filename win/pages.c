@@ -73,7 +73,7 @@ void win_page_show(Win* win) {
 
     col_pair = WIN_COL_PAIR_NORMAL;
     if (win == wins[win_act_idx])
-        col_pair = WIN_COL_PAIR_ACTIVE;
+        col_pair = WIN_COL_PAIR_PAGE_HL;
     mvwchgat(win->win, _current_row + 1, 1, win->c - 2, A_REVERSE, col_pair, NULL);
     if (_current_row != _prev_row) {
         mvwchgat(win->win, _prev_row + 1, 1, win->c - 2, A_NORMAL, WIN_COL_PAIR_NORMAL, NULL);

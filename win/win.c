@@ -28,9 +28,11 @@
 
 #include "../pty.h"
 
-const int WIN_COL_PAIR_NORMAL = 0;
-const int WIN_COL_PAIR_ACTIVE = 1;
-const int WIN_COL_PAIR_PANELS = 2;
+const int WIN_COL_PAIR_NORMAL      = 0;
+const int WIN_COL_PAIR_ACTIVE      = 1;
+const int WIN_COL_PAIR_PANELS      = 2;
+const int WIN_COL_PAIR_BOOKMARK_HL = 3;
+const int WIN_COL_PAIR_PAGE_HL     = 4;
 
 const int WIN_IDX_BOOKMARKS = 0;
 const int WIN_IDX_PAGES     = 1;
@@ -82,9 +84,11 @@ void win_init_all() {
 
     hide_panel(wins[WIN_IDX_BOOKPNL]->pnl);
 
-    init_pair(WIN_COL_PAIR_NORMAL, COLOR_WHITE, COLOR_BLACK);
-    init_pair(WIN_COL_PAIR_ACTIVE, COLOR_GREEN, COLOR_BLACK);
-    init_pair(WIN_COL_PAIR_PANELS, COLOR_BLUE , COLOR_BLACK);
+    init_pair(WIN_COL_PAIR_NORMAL     , COLOR_WHITE, COLOR_BLACK);
+    init_pair(WIN_COL_PAIR_ACTIVE     , COLOR_GREEN, COLOR_BLACK);
+    init_pair(WIN_COL_PAIR_PANELS     , COLOR_BLUE , COLOR_BLACK);
+    init_pair(WIN_COL_PAIR_BOOKMARK_HL, COLOR_BLUE , COLOR_BLACK);
+    init_pair(WIN_COL_PAIR_PAGE_HL    , COLOR_GREEN, COLOR_BLACK);
     win_act_idx = WIN_IDX_BOOKMARKS;
     pnl_act_idx = -1;
 
