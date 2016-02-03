@@ -105,7 +105,7 @@ void rm_bookmark_for_page(Page* page) {
 }
 
 /**
- * Insert a bookmark at the end of the linked list.
+ * Insert a bookmark at the end of the list.
  */
 void insert_bookmark(Page* page, char* line) {
     Bookmark* bm = (Bookmark*) malloc(sizeof(Bookmark));
@@ -123,6 +123,21 @@ void insert_bookmark(Page* page, char* line) {
     if (last_bm != NULL) last_bm->next = bm;
 
     bookmarks = bm;
+}
+
+/**
+ * Update a bookmark in the list, based on a page.
+ */
+void update_bookmark_for_page(Page* page, char* line) {
+    Bookmark* bm = bookmarks;
+
+    if (bm != NULL)
+        while (bm->page != page && bm->next)
+            bm = bm->next;
+
+    bm->page = page;
+    bm->line = (char*) realloc(bm->line, strlen(line) + 1);
+    strcpy(bm->line, line);
 }
 
 /**
@@ -183,9 +198,9 @@ int add_bookmark(Page* page, char* line, bool update) {
          * remove the record and try again.
          */
         if (update) {
-            if (erase_bookmark_for_page(page))
+            if (gdbm_store(db, key, val, GDBM_REPLACE))
                 return -1;
-            return add_bookmark(page, line, false);
+            update_bookmark_for_page(page, line);
         }
         return -1;
     }
