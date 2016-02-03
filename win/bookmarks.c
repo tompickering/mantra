@@ -164,8 +164,27 @@ void _open_bm() {
 }
 
 void _delete_bm() {
+    Bookmark* prev;
+    Bookmark* next;
+    Bookmark* to_erase;
     if (_current_bm != NULL) {
-        erase_bookmark(_current_bm);
+        prev = _current_bm->prev;
+        next = _current_bm->next;
+        to_erase = _current_bm;
+
+        if (next == NULL && prev != NULL) {
+            _current_bm = prev;
+            _navigate_bm(false);
+        } else if (next != NULL) {
+            _current_bm = next;
+        } else { /* next == NULL && prev == NULL */
+            _current_bm = NULL;
+        }
+
+        if (_bm_start == to_erase)
+            _bm_start = _current_bm;
+
+        erase_bookmark(to_erase);
     }
 }
 
