@@ -43,8 +43,11 @@ GDBM_FILE db;
 
 void _datum(datum*, char*);
 void insert_bookmark(Page*, char*);
-void rm_bookmark(Page*);
-int delete_bookmark(Page*);
+void rm_bookmark(Bookmark*);
+void rm_bookmark_for_page(Page*);
+int delete_bookmark_for_page(Page*);
+int erase_bookmark(Bookmark*);
+int erase_bookmark_for_page(Page*);
 int add_bookmark(Page*, char*, bool);
 void db_init(char*);
 void file_init();

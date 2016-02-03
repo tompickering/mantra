@@ -32,6 +32,7 @@
 #define K_BACK    'b' + CTRL
 #define K_BOOKPNL 'b'
 #define K_RETURN  '\n'
+#define K_BM_DEL  'x'
 
 #include <stdbool.h>
 

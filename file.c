@@ -78,15 +78,9 @@ void bookmarks_init() {
 }
 
 /**
- * Remove a bookmark from the linked list.
+ * Remove a bookmark from the list.
  */
-void rm_bookmark(Page* page) {
-    Bookmark* bm = bookmarks;
-
-    if (bm != NULL)
-        while (bm->next && bm->page != page)
-            bm = bm->next;
-
+void rm_bookmark(Bookmark* bm) {
     if (bm != NULL) {
         if (bm->prev != NULL) bm->prev->next = bm->next;
         if (bm->next != NULL) bm->next->prev = bm->prev;
@@ -94,6 +88,20 @@ void rm_bookmark(Page* page) {
         free(bm->line);
         free(bm);
     }
+}
+
+/**
+ * Remove a bookmark from the list, based on a page.
+ */
+void rm_bookmark_for_page(Page* page) {
+    Bookmark* bm = bookmarks;
+
+    if (bm != NULL)
+        while (bm->next && bm->page != page)
+            bm = bm->next;
+
+    if (bm != NULL)
+        rm_bookmark(bm);
 }
 
 /**
@@ -118,9 +126,9 @@ void insert_bookmark(Page* page, char* line) {
 }
 
 /**
- * Remove a bookmark entry from the DB.
+ * Remove a bookmark from the DB, based on the page.
  */
-int delete_bookmark(Page* page) {
+int delete_bookmark_for_page(Page* page) {
     datum key;
     char* sectpage = (char*) malloc(strlen(page->name) + 3);
     sectpage[0] = '0' + page->sect;
@@ -132,7 +140,26 @@ int delete_bookmark(Page* page) {
     if (gdbm_delete(db, key))
         return -1;
 
-    rm_bookmark(page);
+    return 0;
+}
+
+/**
+ * Remove a bookmark from the list and DB.
+ */
+int erase_bookmark(Bookmark* bm) {
+    if (delete_bookmark_for_page(bm->page))
+        return -1;
+    rm_bookmark(bm);
+    return 0;
+}
+
+/**
+ * Remove a bookmark from the list and DB, based on a page.
+ */
+int erase_bookmark_for_page(Page* page) {
+    if (delete_bookmark_for_page(page))
+        return -1;
+    rm_bookmark_for_page(page);
     return 0;
 }
 
@@ -156,7 +183,7 @@ int add_bookmark(Page* page, char* line, bool update) {
          * remove the record and try again.
          */
         if (update) {
-            if (delete_bookmark(page))
+            if (erase_bookmark_for_page(page))
                 return -1;
             return add_bookmark(page, line, false);
         }

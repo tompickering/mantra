@@ -163,6 +163,12 @@ void _open_bm() {
     }
 }
 
+void _delete_bm() {
+    if (_current_bm != NULL) {
+        erase_bookmark(_current_bm);
+    }
+}
+
 void input_win_bookmarks(int ch) {
     bool down;
     switch (ch) {
@@ -183,6 +189,9 @@ void input_win_bookmarks(int ch) {
             break;
         case K_OPEN:
             _open_bm();
+            break;
+        case K_BM_DEL:
+            _delete_bm();
             break;
     }
 }
