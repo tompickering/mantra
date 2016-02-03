@@ -67,6 +67,12 @@ void win_bookmarks_show(Win* win) {
         bm = bm->next;
     }
 
+    /* If we ran out of bookmarks to draw before we
+     * got to the end of the window, finish up by
+     * wiping any debris from the remaining space. */
+    for (; r < win->r - 1; ++r)
+        win_clear_row(win, r);
+
     col_pair = WIN_COL_PAIR_NORMAL;
     if (win == wins[win_act_idx])
         col_pair = WIN_COL_PAIR_BOOKMARK_HL;
