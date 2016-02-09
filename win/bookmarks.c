@@ -221,6 +221,14 @@ void input_win_bookmarks(int ch) {
     }
 }
 
-/* TODO */
 void update_win_bookmarks() {
+    Win* win = wins[WIN_IDX_BOOKMARKS];
+    int r = win->r;
+    int i;
+
+    if (_current_row_bm > r - 3) {
+        for (i = 0; _bm_start->next != NULL && i < _current_row_bm - r + 3; ++i)
+            _bm_start = _bm_start->next;
+        _current_row_bm = r - 3;
+    }
 }
