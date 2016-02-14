@@ -34,6 +34,9 @@
 FORM* bookpnl_form;
 FIELD* bookpnl_field_bookmark;
 
+FORM* searchpnl_form;
+FIELD* searchpnl_field_search;
+
 void pnl_init_all() {
     Win* win;
 
@@ -51,10 +54,30 @@ void pnl_init_all() {
     set_form_win(bookpnl_form, win->win);
     set_form_sub(bookpnl_form, derwin(win->win, win->r, win->c, 2, 2));
     post_form(bookpnl_form);
+
+    win = wins[WIN_IDX_SEARCHPNL];
+    /* FIXME: Handle field dimensions properly */
+    searchpnl_field_search = new_field(1, 40, 2, 2, 0, 0);
+    set_field_type(searchpnl_field_search, TYPE_ALNUM, 40);
+    set_field_back(searchpnl_field_search, A_UNDERLINE);
+    field_opts_off(searchpnl_field_search, O_AUTOSKIP);
+    fields[0] = searchpnl_field_search;
+    searchpnl_form = new_form(fields);
+    set_form_win(searchpnl_form, win->win);
+    set_form_sub(searchpnl_form, derwin(win->win, win->r, win->c, 2, 2));
+    post_form(searchpnl_form);
 }
 
 void draw_win_bookpnl() {
     Win* win = wins[WIN_IDX_BOOKPNL];
+    if (panel_hidden(win->pnl))
+        return;
+    win_draw_border(win);
+    wrefresh(win->win);
+}
+
+void draw_win_searchpnl() {
+    Win* win = wins[WIN_IDX_SEARCHPNL];
     if (panel_hidden(win->pnl))
         return;
     win_draw_border(win);
@@ -82,5 +105,20 @@ void input_win_bookpnl(int ch) {
             break;
         default:
             form_driver(bookpnl_form, ch);
+    }
+}
+
+void input_win_searchpnl(int ch) {
+    switch (ch) {
+        case K_RETURN:
+            set_field_buffer(searchpnl_field_search, 0, "");
+            close_panel();
+            break;
+        case KEY_BACKSPACE:
+            form_driver(searchpnl_form, REQ_LEFT_CHAR);
+            form_driver(searchpnl_form, REQ_DEL_CHAR);
+            break;
+        default:
+            form_driver(searchpnl_form, ch);
     }
 }

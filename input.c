@@ -42,6 +42,9 @@ bool handle_input(int ch) {
             case K_BOOKPNL:
                 open_panel(WIN_IDX_BOOKPNL);
                 break;
+            case K_SEARCH:
+                open_panel(WIN_IDX_SEARCHPNL);
+                break;
             default:
                 active_win()->input(ch);
         }

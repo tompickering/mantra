@@ -38,7 +38,8 @@ const int WIN_IDX_BOOKMARKS = 0;
 const int WIN_IDX_PAGES     = 1;
 const int WIN_IDX_HELPBAR   = 2;
 const int WIN_IDX_BOOKPNL   = 3;
-const int NWIN              = 4;
+const int WIN_IDX_SEARCHPNL = 4;
+const int NWIN              = 5;
 
 Win** wins;
 int win_act_idx;
@@ -66,23 +67,28 @@ void win_init_all() {
     wins[WIN_IDX_PAGES    ]->draw = draw_win_pages;
     wins[WIN_IDX_HELPBAR  ]->draw = draw_win_helpbar;
     wins[WIN_IDX_BOOKPNL  ]->draw = draw_win_bookpnl;
+    wins[WIN_IDX_SEARCHPNL]->draw = draw_win_searchpnl;
 
     wins[WIN_IDX_BOOKMARKS]->input = input_win_bookmarks;
     wins[WIN_IDX_PAGES    ]->input = input_win_pages;
     wins[WIN_IDX_HELPBAR  ]->input = input_default;
     wins[WIN_IDX_BOOKPNL  ]->input = input_win_bookpnl;
+    wins[WIN_IDX_SEARCHPNL]->input = input_win_searchpnl;
 
     wins[WIN_IDX_BOOKMARKS]->update = update_win_bookmarks;
     wins[WIN_IDX_PAGES    ]->update = update_win_pages;
     wins[WIN_IDX_HELPBAR  ]->update = NULL;
     wins[WIN_IDX_BOOKPNL  ]->update = NULL;
+    wins[WIN_IDX_SEARCHPNL]->update = NULL;
 
     wins[WIN_IDX_BOOKMARKS]->can_be_active = true;
     wins[WIN_IDX_PAGES    ]->can_be_active = true;
     wins[WIN_IDX_HELPBAR  ]->can_be_active = false;
     wins[WIN_IDX_BOOKPNL  ]->can_be_active = false;
+    wins[WIN_IDX_SEARCHPNL]->can_be_active = false;
 
-    hide_panel(wins[WIN_IDX_BOOKPNL]->pnl);
+    hide_panel(wins[WIN_IDX_BOOKPNL  ]->pnl);
+    hide_panel(wins[WIN_IDX_SEARCHPNL]->pnl);
 
     init_pair(WIN_COL_PAIR_NORMAL     , COLOR_WHITE, COLOR_BLACK);
     init_pair(WIN_COL_PAIR_ACTIVE     , COLOR_GREEN, COLOR_BLACK);

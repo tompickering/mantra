@@ -31,6 +31,7 @@
 #define K_FWD     'f' + CTRL
 #define K_BACK    'b' + CTRL
 #define K_BOOKPNL 'b'
+#define K_SEARCH  '/'
 #define K_RETURN  '\n'
 #define K_BM_DEL  'x'
 

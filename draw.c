@@ -42,6 +42,7 @@ void draw_windows(int r, int c) {
     win_update(wins[WIN_IDX_PAGES], 0, h_bk, r - h_bk - 1, c);
     win_update(wins[WIN_IDX_HELPBAR], 0, r - 1, 1, c);
     win_update(wins[WIN_IDX_BOOKPNL], pnl_xoff, pnl_yoff, pnl_h, pnl_w);
+    win_update(wins[WIN_IDX_SEARCHPNL], pnl_xoff, pnl_yoff, pnl_h, pnl_w);
     win_draw_all();
 }
 
