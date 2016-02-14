@@ -17,6 +17,8 @@
  *                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#define _GNU_SOURCE /* Needed for strcasestr() definition */
+
 #include "pages.h"
 #include "win.h"
 
@@ -34,6 +36,7 @@ int _current_sect = 0;
 int _prev_row = 0;
 int _page_start = 0;
 int _MAX_NAME_LEN = 20;
+char* _page_search = NULL;
 
 Page* get_current_page() {
     return &pages[_page_start + _current_row];
@@ -110,22 +113,25 @@ void _jump_to_end(bool end) {
     }
 }
 
-void _navigate(bool down) {
+char _navigate(bool down) {
     Win* win = wins[WIN_IDX_PAGES];
     if (down) {
         if (_current_row + 3 < win->r) {
             ++_current_row;
         } else if (_page_start + win->r - 2 < NPAGES) {
             ++_page_start;
-        }
+        } else return 1;
     } else {
         if (_current_row == 0) {
             if (_page_start > 0)
                 --_page_start;
+            else return 1;
         } else {
             --_current_row;
         }
     }
+
+    return 0;
 }
 
 void _page(bool down) {
@@ -148,6 +154,27 @@ void _open_page() {
         open_page(_current_sect, _current_name, "0");
 }
 
+void search_pagewin(bool down, char* term) {
+    Page* start = get_current_page();
+    Page* page;
+
+    if (term) {
+        if (_page_search) free(_page_search);
+        _page_search = (char*) malloc(strlen(term) + 1);
+        strcpy(_page_search, term);
+    }
+
+    if (_page_search) {
+        if (_navigate(down)) _jump_to_end(!down);
+        page = get_current_page();
+        while (strcasestr(page->name, _page_search) == NULL) {
+            if (_navigate(down)) _jump_to_end(!down);
+            page = get_current_page();
+            if (page == start) break;
+        }
+    }
+}
+
 void input_win_pages(int ch) {
     unsigned char sect;
     bool down;
@@ -166,6 +193,11 @@ void input_win_pages(int ch) {
         case K_END:
             down = (ch == K_HOME) ? false : true;
             _jump_to_end(down);
+            break;
+        case K_NEXT:
+        case K_PREV:
+            down = (ch == K_PREV) ? false : true;
+            search_pagewin(down, NULL);
             break;
         case K_OPEN:
             _open_page();

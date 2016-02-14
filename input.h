@@ -30,6 +30,8 @@
 #define K_OPEN    'o'
 #define K_FWD     'f' + CTRL
 #define K_BACK    'b' + CTRL
+#define K_NEXT    'n'
+#define K_PREV    'N'
 #define K_BOOKPNL 'b'
 #define K_SEARCH  '/'
 #define K_RETURN  '\n'

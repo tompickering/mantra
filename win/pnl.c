@@ -91,13 +91,13 @@ void _save_bookmark() {
     *(strchr(bookmark, ' ')) = '\0';
     add_bookmark(get_current_page(), bookmark, true);
     set_field_buffer(bookpnl_field_bookmark, 0, "");
-    close_panel();
 }
 
 void input_win_bookpnl(int ch) {
     switch (ch) {
         case K_RETURN:
             _save_bookmark();
+            close_panel();
             break;
         case KEY_BACKSPACE:
             form_driver(bookpnl_form, REQ_LEFT_CHAR);
@@ -108,10 +108,19 @@ void input_win_bookpnl(int ch) {
     }
 }
 
+void perform_search() {
+    char* term;
+    form_driver(searchpnl_form, REQ_VALIDATION);
+    term = field_buffer(searchpnl_field_search, 0);
+    *(strchr(term, ' ')) = '\0';
+    search_pagewin(true, term);
+    set_field_buffer(searchpnl_field_search, 0, "");
+}
+
 void input_win_searchpnl(int ch) {
     switch (ch) {
         case K_RETURN:
-            set_field_buffer(searchpnl_field_search, 0, "");
+            perform_search();
             close_panel();
             break;
         case KEY_BACKSPACE:

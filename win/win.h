@@ -72,6 +72,8 @@ void input_win_bookmarks(int);
 void input_win_pages(int);
 void input_win_bookpnl(int);
 void input_win_searchpnl(int);
+void search_pagewin(bool, char*);
+void search_bmwin(bool, char*);
 void update_win_pages();
 void update_win_bookmarks();
 Win* active_win();

@@ -33,6 +33,7 @@ int _prev_row_bm = 0;
 Bookmark* _bm_start = NULL;
 Bookmark* _current_bm = NULL;
 int _MAX_NAME_LEN_BM = 20;
+char* _bm_search = NULL;
 
 void win_bookmarks_show(Win* win) {
     /* TODO: Deduplicate with pages code */
