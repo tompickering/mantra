@@ -26,6 +26,7 @@
 #include <ncurses.h>
 #include <panel.h>
 
+#include "../file.h"
 #include "../pty.h"
 
 const int WIN_COL_PAIR_NORMAL      = 0;
@@ -95,7 +96,10 @@ void win_init_all() {
     init_pair(WIN_COL_PAIR_PANELS     , COLOR_BLUE , COLOR_BLACK);
     init_pair(WIN_COL_PAIR_BOOKMARK_HL, COLOR_BLUE , COLOR_BLACK);
     init_pair(WIN_COL_PAIR_PAGE_HL    , COLOR_GREEN, COLOR_BLACK);
-    win_act_idx = WIN_IDX_BOOKMARKS;
+
+    if (bookmarks) win_act_idx = WIN_IDX_BOOKMARKS;
+    else win_act_idx = WIN_IDX_PAGES;
+
     pnl_act_idx = -1;
 
     pnl_init_all();
