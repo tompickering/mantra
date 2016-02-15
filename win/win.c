@@ -219,11 +219,17 @@ Win* active_pnl() {
  */
 char* string_clean_buffer(char* buf, char* src, unsigned int len) {
     int src_len = strlen(src);
+    int i, c;
     strncpy(buf, src, len);
     if (src_len < len)
         memset(buf + src_len, ' ', len - src_len);
     if (src_len > len)
-        buf[len-3] = buf[len-2] = buf[len-1] = '.';
+    {
+        for(i = len - 1, c = 0; i > 0 && c < 3; i--, c++)
+        {
+            buf[i] = '.';
+        }
+    }
     buf[len] = '\0';
     return buf;
 }
