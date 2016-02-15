@@ -57,6 +57,8 @@ void win_page_show(Win* win) {
 
     _MAX_NAME_LEN = win->c / 3;
     max_desc_len = win->c - _MAX_NAME_LEN - 7;
+    if(max_desc_len < 0)
+        max_desc_len = 0;
     name = malloc((_MAX_NAME_LEN + 1) * sizeof(char));
     desc = malloc((max_desc_len + 1) * sizeof(char));
 
