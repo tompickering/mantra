@@ -160,6 +160,9 @@ char _navigate_bm(bool down) {
 
 void _jump_to_end_bm(bool end) {
     Win* win = wins[WIN_IDX_BOOKMARKS];
+
+    if (!_current_bm) return;
+
     if (end) {
         int i;
         _current_row_bm = win->r - 3;
