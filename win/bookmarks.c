@@ -167,6 +167,9 @@ void _jump_to_end_bm(bool end) {
         /* ...And rewind! */
         for (i = 0; _bm_start->prev != NULL && i < win->r - 3; ++i)
             _bm_start = _bm_start->prev;
+        for (; i < win->r - 3; ++i)
+            --_current_row_bm;
+
     } else {
         _current_row_bm = 0;
         _bm_start = bookmarks;
