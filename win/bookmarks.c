@@ -17,6 +17,8 @@
  *                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#define _GNU_SOURCE /* Needed for strcasestr() definition */
+
 #include "win.h"
 
 #include <stdlib.h>
@@ -35,6 +37,15 @@ Bookmark* _current_bm = NULL;
 int _MAX_NAME_LEN_BM = 20;
 char* _bm_search = NULL;
 
+void _update_current_bm() {
+    int i;
+    _current_bm = _bm_start;
+    for (i = 0; _current_bm != NULL && i < _current_row_bm; ++i) {
+        _current_bm = _current_bm->next;
+        if (_current_bm == NULL) break;
+    }
+}
+
 void win_bookmarks_show(Win* win) {
     /* TODO: Deduplicate with pages code */
     int r = 1;
@@ -46,7 +57,6 @@ void win_bookmarks_show(Win* win) {
     char* desc;
     char sect[2];
     Page* page;
-    int i;
 
     sect[1] = '\0';
 
@@ -84,11 +94,7 @@ void win_bookmarks_show(Win* win) {
     }
 
     /* Recalculate _current_bm */
-    _current_bm = _bm_start;
-    for (i = 0; _current_bm != NULL && i < _current_row_bm; ++i) {
-        _current_bm = _current_bm->next;
-        if (_current_bm == NULL) break;
-    }
+    _update_current_bm();
 
     free(name);
     free(desc);
@@ -121,25 +127,30 @@ void _page_bm(bool down) {
         for (i = 0; _bm_start->prev != NULL && i < win->r - 2; ++i)
             _bm_start = _bm_start->prev;
     }
+
+    _update_current_bm();
 }
 
-void _navigate_bm(bool down) {
+char _navigate_bm(bool down) {
     Win* win = wins[WIN_IDX_BOOKMARKS];
     if (down) {
         if (_current_bm && _current_bm->next && _current_row_bm + 3 < win->r) {
             ++_current_row_bm;
         } else if (_bm_start && _bm_start->next && _current_bm->next) {
             _bm_start = _bm_start->next;
-        }
+        } else return 1;
     } else {
         if (_current_row_bm == 0) {
             if (_bm_start && _bm_start->prev) {
                 _bm_start = _bm_start->prev;
-            }
+            } else return 1;
         } else {
             --_current_row_bm;
         }
     }
+
+    _update_current_bm();
+    return 0;
 }
 
 void _jump_to_end_bm(bool end) {
@@ -160,6 +171,8 @@ void _jump_to_end_bm(bool end) {
         _current_row_bm = 0;
         _bm_start = bookmarks;
     }
+
+    _update_current_bm();
 }
 
 void _open_bm() {
@@ -192,6 +205,25 @@ void _delete_bm() {
             _bm_start = _current_bm;
 
         erase_bookmark(to_erase);
+        _update_current_bm();
+    }
+}
+
+void search_bmwin(bool down, char* term) {
+    Bookmark* start = _current_bm;
+
+    if (term) {
+        if (_bm_search) free(_bm_search);
+        _bm_search = (char*) malloc(strlen(term) + 1);
+        strcpy(_bm_search, term);
+    }
+
+    if (_current_bm && _bm_search) {
+        if (_navigate_bm(down)) _jump_to_end_bm(!down);
+        while (_current_bm && strcasestr(_current_bm->page->name, _bm_search) == NULL) {
+            if (_navigate_bm(down)) _jump_to_end_bm(!down);
+            if (_current_bm == start) break;
+        }
     }
 }
 
@@ -212,6 +244,11 @@ void input_win_bookmarks(int ch) {
         case K_END:
             down = (ch == K_HOME) ? false : true;
             _jump_to_end_bm(down);
+            break;
+        case K_NEXT:
+        case K_PREV:
+            down = (ch == K_PREV) ? false : true;
+            search_bmwin(down, NULL);
             break;
         case K_OPEN:
             _open_bm();

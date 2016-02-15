@@ -30,6 +30,7 @@
 #include "../input.h"
 #include "../page.h"
 #include "../file.h"
+#include "../error.h"
 
 FORM* bookpnl_form;
 FIELD* bookpnl_field_bookmark;
@@ -113,7 +114,15 @@ void perform_search() {
     form_driver(searchpnl_form, REQ_VALIDATION);
     term = field_buffer(searchpnl_field_search, 0);
     *(strchr(term, ' ')) = '\0';
-    search_pagewin(true, term);
+
+    if (active_win() == wins[WIN_IDX_PAGES]) {
+        search_pagewin(true, term);
+    } else if (active_win() == wins[WIN_IDX_BOOKMARKS]) {
+        search_bmwin(true, term);
+    } else {
+        die("Search not defined for active window.");
+    }
+
     set_field_buffer(searchpnl_field_search, 0, "");
 }
 
