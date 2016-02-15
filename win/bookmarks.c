@@ -117,6 +117,8 @@ void _page_bm(bool down) {
     Bookmark* bm = _bm_start;
     int i;
 
+    if (!_current_bm) return;
+
     if (down) {
         /* Search ahead; if the list comes to an end soon,
          * don't jump forward a whole page. */
