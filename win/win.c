@@ -241,12 +241,12 @@ void open_page(int sect, char* page, char* line) {
     char* cmd;
     int line_str_len;
     char* line_str = "0g";
-    int cmd_len = strlen(page) + 7; /* len("man x " "\0") */
+    int cmd_len = strlen(page) + 20; /* len("man --pager=less x " " --pager=less\0") */
     cmd = (char*) malloc(cmd_len * sizeof(char));
-    strncpy(cmd, "man   ", 4);
-    strcpy(cmd+6, page);
-    cmd[4] = '0' + sect;
-    cmd[5] = ' ';
+    strncpy(cmd, "man --pager=less ", 17);
+    strcpy(cmd+19, page);
+    cmd[17] = '0' + sect;
+    cmd[18] = ' ';
     cmd[cmd_len - 1] = '\0';
 
     if (line) {
