@@ -59,7 +59,7 @@ void pnl_init_all() {
     win = wins[WIN_IDX_SEARCHPNL];
     /* FIXME: Handle field dimensions properly */
     searchpnl_field_search = new_field(1, 40, 2, 2, 0, 0);
-    set_field_type(searchpnl_field_search, TYPE_ALNUM, 40);
+    set_field_type(searchpnl_field_search, TYPE_REGEXP, "*");
     set_field_back(searchpnl_field_search, A_UNDERLINE);
     field_opts_off(searchpnl_field_search, O_AUTOSKIP);
     fields[0] = searchpnl_field_search;
