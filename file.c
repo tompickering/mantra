@@ -121,8 +121,6 @@ void insert_bookmark(Page* page, char* line) {
     bm->prev = last_bm;
     bm->next = NULL;
     if (last_bm != NULL) last_bm->next = bm;
-
-    bookmarks = bm;
 }
 
 /**
