@@ -22,7 +22,7 @@
 #include <ncurses.h>
 #include <string.h>
 
-const char helpstr[] = "/-Search   Space-Switch   o-Open   jk-Navigate   t-Tag   f-Filter";
+const char helpstr[] = "b-Bookmark  /-Search  Space-Switch  o-Open  jk-Navigate  t-Tag  f-Filter";
 
 void draw_win_helpbar() {
     int cols;
