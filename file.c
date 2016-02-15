@@ -246,10 +246,10 @@ void file_init() {
     mantra_home[strlen(usr_home) + strlen(MANTRA_HOME) + 1] = '\0';
 
     errno = 0;
-    mkdir(MANTRA_HOME, 0700);
+    mkdir(mantra_home, 0700);
 
     if (errno != 0 && errno != EEXIST) {
-        fprintf(stderr, "Error: Unable to create directory %s.\n", MANTRA_HOME);
+        fprintf(stderr, "Error: Unable to create directory %s.\n", mantra_home);
         exit(1);
     }
 
