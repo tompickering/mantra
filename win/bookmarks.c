@@ -19,6 +19,7 @@
 
 #define _GNU_SOURCE /* Needed for strcasestr() definition */
 
+#include "bookmarks.h"
 #include "win.h"
 
 #include <stdlib.h>
@@ -36,6 +37,10 @@ Bookmark* _bm_start = NULL;
 Bookmark* _current_bm = NULL;
 int _MAX_NAME_LEN_BM = 20;
 char* _bm_search = NULL;
+
+Bookmark* get_current_bm() {
+    return _current_bm;
+}
 
 void _update_current_bm() {
     int i;

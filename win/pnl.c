@@ -27,6 +27,7 @@
 #include <form.h>
 
 #include "pages.h"
+#include "bookmarks.h"
 #include "../input.h"
 #include "../page.h"
 #include "../file.h"
@@ -90,7 +91,14 @@ void _save_bookmark() {
     form_driver(bookpnl_form, REQ_VALIDATION);
     bookmark = field_buffer(bookpnl_field_bookmark, 0);
     *(strchr(bookmark, ' ')) = '\0';
-    add_bookmark(get_current_page(), bookmark, true);
+
+    if (active_win() == wins[WIN_IDX_PAGES]) {
+        add_bookmark(get_current_page(), bookmark, true);
+    } else if (active_win() == wins[WIN_IDX_BOOKMARKS]) {
+        Bookmark* bm = get_current_bm();
+        if (bm) add_bookmark(bm->page, bookmark, true);
+    }
+
     set_field_buffer(bookpnl_field_bookmark, 0, "");
 }
 
