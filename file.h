@@ -24,7 +24,7 @@
 #define MANTRA_DB "bookmarks.db"
 
 #include <stdbool.h>
-#include <gdbm.h>
+#include <lmdb.h>
 
 #include "page.h"
 
@@ -39,9 +39,6 @@ struct _Bookmark {
 
 extern Bookmark* bookmarks;
 
-GDBM_FILE db;
-
-void _datum(datum*, char*);
 void insert_bookmark(Page*, char*);
 void update_bookmark_for_page(Page*, char*);
 void rm_bookmark(Bookmark*);
