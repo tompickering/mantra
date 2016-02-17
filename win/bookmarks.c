@@ -56,7 +56,7 @@ void win_bookmarks_show(Win* win) {
     int r = 1;
     int c = 2;
     int col_pair;
-    Bookmark* bm = _bm_start;
+    Bookmark* bm;
     int max_desc_len;
     char* name;
     char* desc;
@@ -71,6 +71,8 @@ void win_bookmarks_show(Win* win) {
     desc = malloc((max_desc_len + 1) * sizeof(char));
 
     if (_bm_start == NULL) _bm_start = bookmarks;
+
+    bm = _bm_start;
 
     for (; bm != NULL && r < win->r - 1; ++r) {
         page = bm->page;
