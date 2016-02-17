@@ -280,4 +280,5 @@ void close_panel() {
         hide_panel(win->pnl);
         pnl_act_idx = -1;
     }
+    refresh();
 }

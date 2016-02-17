@@ -70,6 +70,8 @@ int main(int argc, char** argv) {
     ncurses_init();
     win_init_all();
 
+    draw_screen();
+
     do {
         ch = getch();
         if (ch == -1) {
@@ -78,11 +80,12 @@ int main(int argc, char** argv) {
                 endwin();
                 refresh();
                 win_clear_all();
+                draw_screen();
             }
         } else {
             running = handle_input(ch);
+            draw_screen();
         }
-        draw_screen();
     } while(running);
     ncurses_close();
 
