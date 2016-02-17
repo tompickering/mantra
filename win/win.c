@@ -223,12 +223,9 @@ char* string_clean_buffer(char* buf, char* src, unsigned int len) {
     strncpy(buf, src, len);
     if (src_len < len)
         memset(buf + src_len, ' ', len - src_len);
-    if (src_len > len)
-    {
+    if (src_len > len) {
         for(i = len - 1, c = 0; i > 0 && c < 3; i--, c++)
-        {
             buf[i] = '.';
-        }
     }
     buf[len] = '\0';
     return buf;
