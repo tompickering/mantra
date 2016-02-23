@@ -19,8 +19,8 @@ $ man bash | wc -l
 
 ## Requirements
 
-libgdbm-dev  
-libncursesw5-dev  
+liblmdb-dev
+libncursesw5-dev
 
 ## Installation
 
