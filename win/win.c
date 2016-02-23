@@ -255,9 +255,9 @@ void open_page(char sect, char* page, char* line) {
 
         /* 2 extra characters for 'g' and \0 */
         line_str = (char*) malloc(line_str_len + 2);
-        strcpy(line_str, line);
-        line_str[line_str_len] = 'g';
-        line_str[line_str_len + 1] = '\0';
+        cr = line_str;
+        cr = stpcpy(cr, line);
+        cr = stpcpy(cr, "g");
     }
 
     endwin();
