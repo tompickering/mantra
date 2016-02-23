@@ -18,6 +18,7 @@
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #include "file.h"
+#include "error.h"
 
 #include <pwd.h>
 #include <stdio.h>
@@ -25,19 +26,33 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdint.h>
+#include <sys/types.h>
 #include <sys/stat.h>
 #include <errno.h>
-#include <gdbm.h>
-
-Bookmark* bookmarks = NULL;
 
 /**
- * Load a value into a datum struct.
+ * Check s returns MDB_SUCCESS, otherwise print error and die.
  */
-void _datum(datum* d, char* value) {
-    d->dptr = value;
-    d->dsize = strlen(value);
-}
+#define DIE_UNLESS(s) do {\
+    int rc = (s);\
+    if (rc != MDB_SUCCESS) {\
+        die_msg(mdb_strerror(rc));\
+    }\
+} while (0)
+
+/**
+ * Load a NUL-terminated string into an MDB_val struct.
+ */
+#define STR2VAL(d, v) do {\
+    (d)->mv_data = v;\
+    /* FIXME: we need to store the trailing \0 at the moment */\
+    (d)->mv_size = strlen(v) + 1;\
+} while(0)
+
+Bookmark* bookmarks = NULL;
+MDB_env *env;
+MDB_dbi dbi;
 
 /**
  * Load bookmarks from DB.
@@ -46,20 +61,31 @@ void bookmarks_init() {
     Bookmark* current_bm = bookmarks;
     Bookmark* prev_bm = NULL;
     Page* page;
-    datum key;
-    datum val;
+    MDB_txn *txn;
+    MDB_cursor *cursor;
+    MDB_val key, val;
+    int rc;
 
-    key = gdbm_firstkey(db);
+    DIE_UNLESS(mdb_txn_begin(env, NULL, MDB_RDONLY, &txn));
+    DIE_UNLESS(mdb_cursor_open(txn, dbi, &cursor));
 
-    while (key.dptr != NULL) {
-        page = search_page(key.dptr[0] - '0', key.dptr + 2);
+    rc = mdb_cursor_get(cursor, &key, &val, MDB_FIRST);
+    while (rc != MDB_NOTFOUND) {
+        if (rc != MDB_SUCCESS) {
+            die(mdb_strerror(rc));
+        }
+        int section = *((uint8_t*)key.mv_data) - '0';
+        char *name = ((char*)key.mv_data) + 2;
+        page = search_page(section, name);
 
         if (page != NULL) {
-            val = gdbm_fetch(db, key);
+            char *line = calloc(1, val.mv_size + 1);
+            memcpy(line, val.mv_data, val.mv_size);
+
             current_bm = (Bookmark*) malloc(sizeof(Bookmark));
             if (bookmarks == NULL) bookmarks = current_bm;
             current_bm->page = page;
-            current_bm->line = val.dptr;
+            current_bm->line = line;
             if (prev_bm != NULL) {
                 current_bm->prev = prev_bm;
                 prev_bm->next = current_bm;
@@ -67,11 +93,13 @@ void bookmarks_init() {
             prev_bm = current_bm;
         } else {
             /* TODO: Flag to clear up all missing marks? */
-            fprintf(stderr, "Warning: Bookmarked page '%s' not found.\n", key.dptr + 2);
+            fprintf(stderr, "Warning: Bookmarked page '%s' not found.\n", name);
         }
 
-        key = gdbm_nextkey(db, key);
+        rc = mdb_cursor_get(cursor, &key, &val, MDB_NEXT);
     }
+    mdb_cursor_close(cursor);
+    mdb_txn_commit(txn);
 
     if (bookmarks != NULL) bookmarks->prev = NULL;
     if (current_bm != NULL) current_bm->next = NULL;
@@ -144,18 +172,28 @@ void update_bookmark_for_page(Page* page, char* line) {
  * Remove a bookmark from the DB, based on the page.
  */
 int delete_bookmark_for_page(Page* page) {
-    datum key;
-    char* sectpage = (char*) malloc(strlen(page->name) + 3);
-    sectpage[0] = '0' + page->sect;
-    sectpage[1] = ':';
-    strcpy(sectpage + 2, page->name);
-    sectpage[strlen(page->name) + 3] = '\0';
-    _datum(&key, sectpage);
+    char *p, *sectpage = (char*) malloc(strlen(page->name) + 3);
+    MDB_txn *txn;
+    MDB_val key;
+    int rc;
 
-    if (gdbm_delete(db, key))
-        return -1;
+    p = sectpage;
+    *(p++) = '0' + page->sect;
+    *(p++) = ':';
+    p = strcpy(p, page->name);
 
-    return 0;
+    STR2VAL(&key, sectpage);
+
+    DIE_UNLESS(mdb_txn_begin(env, NULL, 0, &txn));
+
+    rc = mdb_del(txn, dbi, &key, NULL);
+    if (rc == MDB_SUCCESS) {
+        mdb_txn_commit(txn);
+    } else {
+        mdb_txn_abort(txn);
+    }
+
+    return rc;
 }
 
 /**
@@ -182,30 +220,44 @@ int erase_bookmark_for_page(Page* page) {
  * Create a bookmark entry in the DB.
  */
 int add_bookmark(Page* page, char* line, bool update) {
-    datum key;
-    datum val;
-    char* sectpage = (char*) malloc(strlen(page->name) + 3);
-    sectpage[0] = '0' + page->sect;
-    sectpage[1] = ':';
-    strcpy(sectpage + 2, page->name);
-    sectpage[strlen(page->name) + 3] = '\0';
-    _datum(&key, sectpage);
-    _datum(&val, line);
+    MDB_val key, val;
+    MDB_txn *txn;
+    MDB_cursor *cursor;
+    char *p, *sectpage = malloc(strlen(page->name) + 3);
+    int rc, updating = 0;
 
-    if (gdbm_store(db, key, val, GDBM_INSERT)) {
-        /* If we couldn't add a record, this may be
-         * because the key exists. If update requested,
-         * remove the record and try again.
-         */
-        if (update) {
-            if (gdbm_store(db, key, val, GDBM_REPLACE))
-                return -1;
-            update_bookmark_for_page(page, line);
+    p = sectpage;
+    *(p++) = '0' + page->sect;
+    *(p++) = ':';
+    p = strcpy(p, page->name);
+
+    STR2VAL(&key, sectpage);
+    STR2VAL(&val, line);
+
+    DIE_UNLESS(mdb_txn_begin(env, NULL, 0, &txn));
+    DIE_UNLESS(mdb_cursor_open(txn, dbi, &cursor));
+
+    rc = mdb_cursor_get(cursor, &key, &val, MDB_SET);
+    if (rc == MDB_SUCCESS) {
+        if (!update) {
+            mdb_cursor_close(cursor);
+            mdb_txn_abort(txn);
+            return -1;
         }
-        return -1;
+        updating = 1;
+    } else if (rc != MDB_NOTFOUND) {
+        die(mdb_strerror(rc));
     }
 
-    insert_bookmark(page, line);
+    DIE_UNLESS(mdb_put(txn, dbi, &key, &val, 0));
+
+    if (updating) {
+        update_bookmark_for_page(page, line);
+    } else {
+        insert_bookmark(page, line);
+    }
+    mdb_cursor_close(cursor);
+    mdb_txn_commit(txn);
 
     return 0;
 }
@@ -215,10 +267,20 @@ int add_bookmark(Page* page, char* line, bool update) {
  */
 void db_init(char* dir) {
     char* db_path = (char*) malloc(strlen(dir) + strlen(MANTRA_DB) + 1);
+	MDB_txn *txn;
+
     strcpy(db_path, dir);
     strcpy(db_path + strlen(dir), MANTRA_DB);
     db_path[strlen(dir) + strlen(MANTRA_DB)] = '\0';
-    db = gdbm_open(db_path, 0, GDBM_WRCREAT, 0644, NULL);
+
+    DIE_UNLESS(mdb_env_create(&env));
+    DIE_UNLESS(mdb_env_set_mapsize(env, 10485760));
+    DIE_UNLESS(mdb_env_open(env, db_path, MDB_NOSUBDIR, 0600));
+
+    DIE_UNLESS(mdb_txn_begin(env, NULL, 0, &txn));
+    DIE_UNLESS(mdb_dbi_open(txn, NULL, MDB_DUPSORT, &dbi));
+    DIE_UNLESS(mdb_txn_commit(txn));
+
 }
 
 /**
@@ -270,5 +332,6 @@ void file_close() {
         head = bookmarks;
     }
 
-    gdbm_close(db);
+    mdb_dbi_close(env, dbi);
+    mdb_env_close(env);
 }
