@@ -272,12 +272,12 @@ int add_bookmark(Page* page, char* line, bool update) {
  * Create and open a database file to store bookmarks.
  */
 void db_init(char* dir) {
-    char* db_path = (char*) malloc(strlen(dir) + strlen(MANTRA_DB) + 1);
+    char *p, *db_path;
 	MDB_txn *txn;
 
-    strcpy(db_path, dir);
-    strcpy(db_path + strlen(dir), MANTRA_DB);
-    db_path[strlen(dir) + strlen(MANTRA_DB)] = '\0';
+    p = db_path = (char*) malloc(strlen(dir) + strlen(MANTRA_DB) + 1);
+    p = stpcpy(p, dir);
+    p = stpcpy(p, MANTRA_DB);
 
     DIE_UNLESS(mdb_env_create(&env));
     DIE_UNLESS(mdb_env_set_mapsize(env, 10485760));
@@ -296,7 +296,7 @@ void db_init(char* dir) {
  */
 void file_init() {
     char* usr_home = NULL;
-    char* mantra_home;
+    char *p, *mantra_home;
 
     usr_home = getenv("HOME");
 
@@ -308,11 +308,10 @@ void file_init() {
         exit(1);
     }
 
-    mantra_home = (char*) malloc(strlen(usr_home) + strlen(MANTRA_HOME) + 2);
-    strcpy(mantra_home, usr_home);
-    mantra_home[strlen(usr_home)] = '/';
-    strcpy(mantra_home + strlen(usr_home) + 1, MANTRA_HOME);
-    mantra_home[strlen(usr_home) + strlen(MANTRA_HOME) + 1] = '\0';
+    p = mantra_home = (char*) malloc(strlen(usr_home) + strlen(MANTRA_HOME) + 2);
+    p = stpcpy(p, usr_home);
+    *(p++) = '/';
+    p = stpcpy(p, MANTRA_HOME);
 
     errno = 0;
     mkdir(mantra_home, 0700);
