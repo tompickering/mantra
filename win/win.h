@@ -79,7 +79,7 @@ void update_win_bookmarks();
 Win* active_win();
 Win* active_pnl();
 char* string_clean_buffer(char*, char*, unsigned int);
-void open_page(int, char*, char*);
+void open_page(char, char*, char*);
 void open_panel(int);
 void close_panel(void);
 
