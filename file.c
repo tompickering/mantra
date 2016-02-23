@@ -65,6 +65,9 @@ void bookmarks_init() {
     MDB_cursor *cursor;
     MDB_val key, val;
     int rc;
+    char* name;
+    char* line;
+    int section;
 
     DIE_UNLESS(mdb_txn_begin(env, NULL, MDB_RDONLY, &txn));
     DIE_UNLESS(mdb_cursor_open(txn, dbi, &cursor));
@@ -74,12 +77,12 @@ void bookmarks_init() {
         if (rc != MDB_SUCCESS) {
             die(mdb_strerror(rc));
         }
-        int section = *((uint8_t*)key.mv_data) - '0';
-        char *name = ((char*)key.mv_data) + 2;
+        section = *((uint8_t*)key.mv_data) - '0';
+        name = ((char*)key.mv_data) + 2;
         page = search_page(section, name);
 
         if (page != NULL) {
-            char *line = calloc(1, val.mv_size + 1);
+            line = calloc(1, val.mv_size + 1);
             memcpy(line, val.mv_data, val.mv_size);
 
             current_bm = (Bookmark*) malloc(sizeof(Bookmark));
