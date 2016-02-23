@@ -196,6 +196,7 @@ int delete_bookmark_for_page(Page* page) {
         mdb_txn_abort(txn);
     }
 
+    free(sectpage);
     return rc;
 }
 
@@ -245,6 +246,7 @@ int add_bookmark(Page* page, char* line, bool update) {
         if (!update) {
             mdb_cursor_close(cursor);
             mdb_txn_abort(txn);
+            free(sectpage);
             return -1;
         }
         updating = 1;
@@ -262,6 +264,7 @@ int add_bookmark(Page* page, char* line, bool update) {
     mdb_cursor_close(cursor);
     mdb_txn_commit(txn);
 
+    free(sectpage);
     return 0;
 }
 
@@ -284,6 +287,7 @@ void db_init(char* dir) {
     DIE_UNLESS(mdb_dbi_open(txn, NULL, MDB_DUPSORT, &dbi));
     DIE_UNLESS(mdb_txn_commit(txn));
 
+    free(db_path);
 }
 
 /**
@@ -320,6 +324,7 @@ void file_init() {
 
     db_init(mantra_home);
     bookmarks_init();
+    free(mantra_home);
 }
 
 /**

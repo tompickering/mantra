@@ -42,7 +42,7 @@ void pages_init() {
     char cmd[] = "man -k . -s    2>/dev/null | sort";
     char* line = NULL;
     char* tok = NULL;
-    size_t len;
+    size_t len = 0;
     size_t toklen;
     Page* page = NULL;
 
@@ -82,6 +82,8 @@ void pages_init() {
             strcpy(page->desc, tok);
         }
         pclose(fp);
+        free(line);
+        line = NULL;
     }
 }
 
