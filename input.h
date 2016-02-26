@@ -34,7 +34,7 @@
 #define K_PREV    'N'
 #define K_BOOKPNL 'b'
 #define K_SEARCH  '/'
-#define K_RETURN  '\n'
+#define K_RETURN  '\r'
 #define K_BM_DEL  'x'
 
 #include <stdbool.h>
