@@ -24,6 +24,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #include <ncurses.h>
 
@@ -35,7 +36,6 @@ int _current_row_bm = 0;
 int _prev_row_bm = 0;
 Bookmark* _bm_start = NULL;
 Bookmark* _current_bm = NULL;
-int _MAX_NAME_LEN_BM = 20;
 char* _bm_search = NULL;
 
 Bookmark* get_current_bm() {
@@ -57,17 +57,30 @@ void win_bookmarks_show(Win* win) {
     int c = 2;
     int col_pair;
     Bookmark* bm;
+    int max_name_len;
+    int max_line_len;
     int max_desc_len;
+    int desc_x;
     char* name;
+    char* line;
     char* desc;
     char sect[2];
+    int line_int;
+    int line_pad;
     Page* page;
 
     sect[1] = '\0';
 
-    _MAX_NAME_LEN_BM = win->c / 3;
-    max_desc_len = win->c - _MAX_NAME_LEN_BM - 7;
-    name = malloc((_MAX_NAME_LEN_BM + 1) * sizeof(char));
+    max_name_len = win->c / 6;
+    max_line_len = (max_name_len < 6) ? max_name_len : 6;
+    max_line_len--;
+    while (win->c / 3 - max_name_len - max_line_len > 1 + win->c/8)
+        max_name_len++;
+    if ((win->c / 3) % 2) max_name_len--;
+    max_desc_len = win->c - max_name_len - max_line_len - 9;
+    desc_x = c + 3 + win->c / 3;
+    name = malloc((max_name_len + 1) * sizeof(char));
+    line = malloc((max_line_len + 1) * sizeof(char));
     desc = malloc((max_desc_len + 1) * sizeof(char));
 
     if (_bm_start == NULL) _bm_start = bookmarks;
@@ -77,11 +90,17 @@ void win_bookmarks_show(Win* win) {
     for (; bm != NULL && r < win->r - 1; ++r) {
         page = bm->page;
         sect[0] = '0' + page->sect;
+        line_int = atoi(bm->line);
+        line_pad = max_line_len - log10((float) line_int);
+        if (line_pad < 0) line_pad = 0;
+        if (line_int != 1) line_pad++;
         mvwprintw(win->win, r, c, sect);
-        string_clean_buffer(name, page->name, _MAX_NAME_LEN_BM);
-        string_clean_buffer(desc, page->desc,  max_desc_len);
+        string_clean_buffer(name, page->name, max_name_len);
+        string_clean_buffer(line,   bm->line, max_line_len);
+        string_clean_buffer(desc, page->desc, max_desc_len);
         mvwprintw(win->win, r, c + 2, name);
-        mvwprintw(win->win, r, c + 3 + _MAX_NAME_LEN_BM, desc);
+        mvwprintw(win->win, r, c + 3 + max_name_len + line_pad - 1, line);
+        mvwprintw(win->win, r, desc_x, desc);
         bm = bm->next;
     }
 
@@ -104,6 +123,7 @@ void win_bookmarks_show(Win* win) {
     _update_current_bm();
 
     free(name);
+    free(line);
     free(desc);
 }
 
