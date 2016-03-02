@@ -28,22 +28,13 @@
 #include "draw.h"
 #include "win/win.h"
 
-volatile bool flag_sigwinch = false;
-
-/**
- * Registered as SIGWINCH handler
- * Set a flag to indicate that windows need
- * a complete redraw.
- */
-void handle_sigwinch(int sig) {
-    flag_sigwinch = true;
-}
-
 void ncurses_init() {
     initscr();
     cbreak();
     noecho();
     halfdelay(1);
+    nonl();
+    intrflush(stdscr, false);
     keypad(stdscr, true);
     curs_set(0);
     start_color();
@@ -57,8 +48,6 @@ void ncurses_close() {
 int main(int argc, char** argv) {
     int ch = 0;
     bool running = true;
-
-    signal(SIGWINCH, handle_sigwinch);
 
     printf("Loading pages...\n");
     pages_init();
@@ -74,17 +63,19 @@ int main(int argc, char** argv) {
 
     do {
         ch = getch();
-        if (ch == -1) {
-            if (flag_sigwinch) {
-                flag_sigwinch = false;
+        switch (ch) {
+            case KEY_RESIZE:
                 endwin();
                 refresh();
                 win_clear_all();
                 draw_screen();
-            }
-        } else {
-            running = handle_input(ch);
-            draw_screen();
+                break;
+            case ERR:
+                break;
+            default:
+                running = handle_input(ch);
+                draw_screen();
+                break;
         }
     } while(running);
     ncurses_close();
