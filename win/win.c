@@ -57,9 +57,9 @@ void input_default(int n) {
 
 void win_init_all() {
     int i;
-    wins = (Win**) malloc(NWIN * sizeof(Win*));
+    wins = (Win**) calloc(NWIN, sizeof(Win*));
     for (i = 0; i < NWIN; ++i) {
-        wins[i] = (Win*) malloc(sizeof(Win));
+        wins[i] = (Win*) calloc(1, sizeof(Win));
         wins[i]->win = newwin(0, 0, 0, 0);
         wins[i]->pnl = new_panel(wins[i]->win);
     }
@@ -264,6 +264,8 @@ void open_page(char sect, char* page, char* line) {
     run_pty(cmd, line_str);
 
     free(cmd);
+    if (line)
+        free(line_str);
     refresh();
     win_clear_all();
 }

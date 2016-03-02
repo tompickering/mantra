@@ -162,8 +162,7 @@ void search_pagewin(bool down, char* term) {
 
     if (term) {
         if (_page_search) free(_page_search);
-        _page_search = (char*) malloc(strlen(term) + 1);
-        strcpy(_page_search, term);
+        _page_search = strdup(term);
     }
 
     if (_page_search) {
