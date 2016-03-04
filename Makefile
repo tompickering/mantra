@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-.PHONY: clean all
+.PHONY: clean all install
 
 all:
 
