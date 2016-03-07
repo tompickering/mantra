@@ -12,6 +12,8 @@ LDLIBS=-lncursesw -lpanel -lmenu -lform -llmdb -lm
 NAME=mantra
 CFLAGS=-Wall -pedantic -g
 
+PREFIX = /usr/local
+
 %.d: %.c
 	$(CC) -MM -MF $@ -MT $@ -MT $*.o $<
 
@@ -24,8 +26,8 @@ $(NAME): $(OBJS)
 clean:
 	rm -rf $(CLEAN) core
 
-install:
-	cp mantra /usr/bin/
+install: all
+	install $(NAME) $(DESTDIR)$(PREFIX)/bin
 
 ifneq ($(findstring clean,$(MAKECMDGOALS)),clean)
 -include $(DEPS)
