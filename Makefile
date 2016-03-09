@@ -6,11 +6,13 @@ all:
 
 OBJS := $(patsubst %.c,%.o,$(wildcard *.c **/*.c))
 DEPS = $(OBJS:%.o=%.d)
-CLEAN = $(PROGRAM) $(OBJS) $(DEPS)
+CLEAN = $(NAME) $(OBJS) $(DEPS)
 
 LDLIBS=-lncursesw -lpanel -lmenu -lform -llmdb -lm
 NAME=mantra
 CFLAGS=-Wall -pedantic -g
+
+PREFIX = /usr/local
 
 %.d: %.c
 	$(CC) -MM -MF $@ -MT $@ -MT $*.o $<
@@ -24,8 +26,8 @@ $(NAME): $(OBJS)
 clean:
 	rm -rf $(CLEAN) core
 
-install:
-	cp mantra /usr/bin/
+install: all
+	install $(NAME) $(DESTDIR)$(PREFIX)/bin
 
 ifneq ($(findstring clean,$(MAKECMDGOALS)),clean)
 -include $(DEPS)
