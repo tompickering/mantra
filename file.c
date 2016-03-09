@@ -23,7 +23,6 @@
 #include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <unistd.h>
 #include <string.h>
 #include <stdint.h>
@@ -222,9 +221,10 @@ int erase_bookmark_for_page(Page* page) {
 
 /**
  * Create a bookmark entry in the DB.
+ * If 'update' is specified, update this bookmark entry.
  */
-int add_bookmark(Page* page, char* line, bool update) {
-    MDB_val key, val;
+int add_bookmark(Page* page, char* line, Bookmark* update) {
+    MDB_val key, val, oldval;
     MDB_txn *txn;
     MDB_cursor *cursor;
     char *p, *sectpage = malloc(strlen(page->name) + 3);
@@ -241,7 +241,12 @@ int add_bookmark(Page* page, char* line, bool update) {
     DIE_UNLESS(mdb_txn_begin(env, NULL, 0, &txn));
     DIE_UNLESS(mdb_cursor_open(txn, dbi, &cursor));
 
-    rc = mdb_cursor_get(cursor, &key, &val, MDB_SET);
+    if (update) {
+        rc = mdb_cursor_get(cursor, &key, &oldval, MDB_SET);
+    } else {
+        rc = mdb_cursor_get(cursor, &key, &val, MDB_SET);
+    }
+
     if (rc == MDB_SUCCESS) {
         if (!update) {
             mdb_cursor_close(cursor);
@@ -254,6 +259,13 @@ int add_bookmark(Page* page, char* line, bool update) {
         die(mdb_strerror(rc));
     }
 
+    if (updating) {
+        /* Delete existing entry for the
+         * bookmark we've been passed */
+        STR2VAL(&oldval, update->line);
+        DIE_UNLESS(mdb_del(txn, dbi, &key, &oldval));
+    }
+
     DIE_UNLESS(mdb_put(txn, dbi, &key, &val, 0));
 
     if (updating) {
@@ -261,8 +273,9 @@ int add_bookmark(Page* page, char* line, bool update) {
     } else {
         insert_bookmark(page, line);
     }
+
     mdb_cursor_close(cursor);
-    mdb_txn_commit(txn);
+    DIE_UNLESS(mdb_txn_commit(txn));
 
     free(sectpage);
     return 0;

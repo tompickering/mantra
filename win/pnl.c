@@ -93,10 +93,10 @@ void _save_bookmark() {
     *(strchr(bookmark, ' ')) = '\0';
 
     if (active_win() == wins[WIN_IDX_PAGES]) {
-        add_bookmark(get_current_page(), bookmark, true);
+        add_bookmark(get_current_page(), bookmark, NULL);
     } else if (active_win() == wins[WIN_IDX_BOOKMARKS]) {
         Bookmark* bm = get_current_bm();
-        if (bm) add_bookmark(bm->page, bookmark, true);
+        if (bm) add_bookmark(bm->page, bookmark, bm);
     }
 
     set_field_buffer(bookpnl_field_bookmark, 0, "");

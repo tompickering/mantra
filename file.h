@@ -23,7 +23,6 @@
 #define MANTRA_HOME ".mantra/"
 #define MANTRA_DB "bookmarks.db"
 
-#include <stdbool.h>
 #include <lmdb.h>
 
 #include "page.h"
@@ -46,7 +45,7 @@ void rm_bookmark_for_page(Page*);
 int delete_bookmark_for_page(Page*);
 int erase_bookmark(Bookmark*);
 int erase_bookmark_for_page(Page*);
-int add_bookmark(Page*, char*, bool);
+int add_bookmark(Page*, char*, Bookmark*);
 void db_init(char*);
 void file_init();
 void file_close();
