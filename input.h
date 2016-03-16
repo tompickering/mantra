@@ -36,6 +36,7 @@
 #define K_SEARCH  '/'
 #define K_RETURN  '\r'
 #define K_BM_DEL  'x'
+#define K_RELOAD  'r'
 
 #include <stdbool.h>
 

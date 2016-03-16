@@ -56,7 +56,7 @@ MDB_dbi dbi;
 /**
  * Load bookmarks from DB.
  */
-void bookmarks_init() {
+void load_bookmarks() {
     Bookmark* current_bm = bookmarks;
     Bookmark* prev_bm = NULL;
     Page* page;
@@ -335,14 +335,14 @@ void file_init() {
     }
 
     db_init(mantra_home);
-    bookmarks_init();
+    load_bookmarks();
     free(mantra_home);
 }
 
 /**
- * Cleanup.
+ * Free the entire bookmark list.
  */
-void file_close() {
+void free_bookmarks() {
     Bookmark* head = bookmarks;
 
     while (bookmarks != NULL) {
@@ -352,6 +352,19 @@ void file_close() {
         head = bookmarks;
     }
 
+    bookmarks = NULL;
+}
+
+void refresh_bookmarks() {
+    free_bookmarks();
+    load_bookmarks();
+}
+
+/**
+ * Cleanup.
+ */
+void file_close() {
+    free_bookmarks();
     mdb_dbi_close(env, dbi);
     mdb_env_close(env);
 }

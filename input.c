@@ -39,6 +39,10 @@ bool handle_input(int ch) {
             case K_QUIT:
                 quit = true;
                 break;
+            case K_RELOAD:
+                free_bookmarks();
+                load_bookmarks();
+                break;
             case K_BOOKPNL:
                 open_panel(WIN_IDX_BOOKPNL);
                 break;
