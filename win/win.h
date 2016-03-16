@@ -25,6 +25,8 @@
 #include <ncurses.h>
 #include <panel.h>
 
+#include "../input.h"
+
 typedef struct _Win {
     unsigned int r;
     unsigned int c;

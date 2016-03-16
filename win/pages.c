@@ -179,39 +179,40 @@ void search_pagewin(bool down, char* term) {
 void input_win_pages(int ch) {
     unsigned char sect;
     bool down;
-    switch (ch) {
+    Key k = inp2key(ch);
+    switch (k) {
         case K_FWD:
         case K_BACK:
-            down = (ch == K_BACK) ? false : true;
+            down = (k == K_BACK) ? false : true;
             _page(down);
             break;
         case K_UP:
         case K_DOWN:
-            down = (ch == K_UP) ? false : true;
+            down = (k == K_UP) ? false : true;
             _navigate(down);
             break;
         case K_HOME:
         case K_END:
-            down = (ch == K_HOME) ? false : true;
+            down = (k == K_HOME) ? false : true;
             _jump_to_end(down);
             break;
         case K_NEXT:
         case K_PREV:
-            down = (ch == K_PREV) ? false : true;
+            down = (k == K_PREV) ? false : true;
             search_pagewin(down, NULL);
             break;
         case K_OPEN:
             _open_page();
             break;
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
+        case K_1:
+        case K_2:
+        case K_3:
+        case K_4:
+        case K_5:
+        case K_6:
+        case K_7:
+        case K_8:
+        case K_9:
             sect = ch - '0';
             _page_start = (size_t) (SECT[sect] - pages);
             _current_row = 0;

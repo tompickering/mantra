@@ -276,25 +276,26 @@ void search_bmwin(bool down, char* term) {
 
 void input_win_bookmarks(int ch) {
     bool down;
-    switch (ch) {
+    Key k = inp2key(ch);
+    switch (k) {
         case K_FWD:
         case K_BACK:
-            down = (ch == K_BACK) ? false : true;
+            down = (k == K_BACK) ? false : true;
             _page_bm(down);
             break;
         case K_UP:
         case K_DOWN:
-            down = (ch == K_UP) ? false : true;
+            down = (k == K_UP) ? false : true;
             _navigate_bm(down);
             break;
         case K_HOME:
         case K_END:
-            down = (ch == K_HOME) ? false : true;
+            down = (k == K_HOME) ? false : true;
             _jump_to_end_bm(down);
             break;
         case K_NEXT:
         case K_PREV:
-            down = (ch == K_PREV) ? false : true;
+            down = (k == K_PREV) ? false : true;
             search_bmwin(down, NULL);
             break;
         case K_OPEN:

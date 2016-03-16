@@ -21,25 +21,58 @@
 #define GUARD_INPUT_H
 
 #define CTRL      - 96
-#define K_CYCLE   ' '
-#define K_QUIT    'q'
-#define K_DOWN    'j'
-#define K_UP      'k'
-#define K_HOME    'g'
-#define K_END     'G'
-#define K_OPEN    'o'
-#define K_FWD     'f' + CTRL
-#define K_BACK    'b' + CTRL
-#define K_NEXT    'n'
-#define K_PREV    'N'
-#define K_BOOKPNL 'b'
-#define K_SEARCH  '/'
-#define K_RETURN  '\r'
-#define K_BM_DEL  'x'
-#define K_RELOAD  'r'
+
+#define K_DEFAULT_CYCLE   ' '
+#define K_DEFAULT_QUIT    'q'
+#define K_DEFAULT_DOWN    'j'
+#define K_DEFAULT_UP      'k'
+#define K_DEFAULT_HOME    'g'
+#define K_DEFAULT_END     'G'
+#define K_DEFAULT_OPEN    'o'
+#define K_DEFAULT_FWD     'f' + CTRL
+#define K_DEFAULT_BACK    'b' + CTRL
+#define K_DEFAULT_NEXT    'n'
+#define K_DEFAULT_PREV    'N'
+#define K_DEFAULT_BOOKPNL 'b'
+#define K_DEFAULT_SEARCH  '/'
+#define K_DEFAULT_RETURN  '\r'
+#define K_DEFAULT_BM_DEL  'x'
+#define K_DEFAULT_RELOAD  'r'
 
 #include <stdbool.h>
 
+typedef enum Key Key;
+
+enum Key {
+    K_0,
+    K_1,
+    K_2,
+    K_3,
+    K_4,
+    K_5,
+    K_6,
+    K_7,
+    K_8,
+    K_9,
+    K_CYCLE,
+    K_QUIT,
+    K_DOWN,
+    K_UP,
+    K_HOME,
+    K_END,
+    K_OPEN,
+    K_FWD,
+    K_BACK,
+    K_NEXT,
+    K_PREV,
+    K_BOOKPNL,
+    K_SEARCH,
+    K_RETURN,
+    K_BM_DEL,
+    K_RELOAD
+};
+
+Key inp2key(int ch);
 bool handle_input(int ch);
 
 #endif
