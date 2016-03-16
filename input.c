@@ -21,6 +21,7 @@
 
 #include <stdbool.h>
 
+#include "file.h"
 #include "win/win.h"
 
 /**
@@ -42,6 +43,7 @@ bool handle_input(int ch) {
             case K_RELOAD:
                 free_bookmarks();
                 load_bookmarks();
+                reset_win_bookmarks();
                 break;
             case K_BOOKPNL:
                 open_panel(WIN_IDX_BOOKPNL);

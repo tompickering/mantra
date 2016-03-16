@@ -38,6 +38,18 @@ Bookmark* _bm_start = NULL;
 Bookmark* _current_bm = NULL;
 char* _bm_search = NULL;
 
+void reset_win_bookmarks() {
+    if (_prev_row_bm) {
+        Win* win = wins[WIN_IDX_BOOKMARKS];
+        mvwchgat(win->win, _prev_row_bm + 1, 1, win->c - 2, A_NORMAL, WIN_COL_PAIR_NORMAL, NULL);
+    }
+
+    _current_row_bm = 0;
+    _prev_row_bm = 0;
+    _bm_start = NULL;
+    _current_bm = NULL;
+}
+
 Bookmark* get_current_bm() {
     return _current_bm;
 }

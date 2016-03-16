@@ -70,6 +70,7 @@ void draw_win_bookpnl();
 void draw_win_searchpnl();
 void input_win_bookmarks(int);
 void input_win_pages(int);
+void reset_win_bookmarks();
 void input_win_bookpnl(int);
 void input_win_searchpnl(int);
 void search_pagewin(bool, char*);
