@@ -52,6 +52,7 @@ Key inp2key(int ch) {
         case K_DEFAULT_RETURN:  return K_RETURN;
         case K_DEFAULT_BM_DEL:  return K_BM_DEL;
         case K_DEFAULT_RELOAD:  return K_RELOAD;
+        case K_DEFAULT_BACKSP:  return K_BACKSP;
     }
 
     return -1;

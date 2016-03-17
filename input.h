@@ -38,12 +38,11 @@
 #define K_DEFAULT_RETURN  '\r'
 #define K_DEFAULT_BM_DEL  'x'
 #define K_DEFAULT_RELOAD  'r'
+#define K_DEFAULT_BACKSP   KEY_BACKSPACE
 
 #include <stdbool.h>
 
-typedef enum Key Key;
-
-enum Key {
+typedef enum Key {
     K_0,
     K_1,
     K_2,
@@ -69,8 +68,9 @@ enum Key {
     K_SEARCH,
     K_RETURN,
     K_BM_DEL,
-    K_RELOAD
-};
+    K_RELOAD,
+    K_BACKSP
+} Key;
 
 Key inp2key(int ch);
 bool handle_input(int ch);

@@ -49,5 +49,7 @@ int add_bookmark(Page*, char*, Bookmark*);
 void db_init(char*);
 void file_init();
 void file_close();
+void free_bookmarks();
+void load_bookmarks();
 
 #endif
