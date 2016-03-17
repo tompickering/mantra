@@ -217,6 +217,8 @@ void input_win_pages(int ch) {
             _page_start = (size_t) (SECT[sect] - pages);
             _current_row = 0;
             break;
+        default:
+            break;
     }
 }
 

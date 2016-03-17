@@ -304,6 +304,8 @@ void input_win_bookmarks(int ch) {
         case K_BM_DEL:
             _delete_bm();
             break;
+        default:
+            break;
     }
 }
 
