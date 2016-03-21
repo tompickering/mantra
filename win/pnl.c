@@ -103,9 +103,8 @@ void _save_bookmark() {
 }
 
 void input_win_bookpnl(int ch) {
-    Key k = inp2key(ch);
-    switch (k) {
-        case K_RETURN:
+    switch (ch) {
+        case '\r':
             _save_bookmark();
             close_panel();
             break;
@@ -136,9 +135,8 @@ void perform_search() {
 }
 
 void input_win_searchpnl(int ch) {
-    Key k = inp2key(ch);
-    switch (k) {
-        case K_RETURN:
+    switch (ch) {
+        case '\r':
             perform_search();
             close_panel();
             break;
