@@ -36,7 +36,7 @@ const unsigned char NSECTS = 9;
 void pages_init() {
     FILE *fp;
     int npages;
-    unsigned char sect;
+    char *sect = NULL;
     int page_idx;
     char tok_delim[2] = " ";
     char cmd[] = "man -k . -s    2>/dev/null | sort";
@@ -48,19 +48,21 @@ void pages_init() {
     fp = popen("man -k . | wc -l", "r");
     getline(&line, &len, fp);
     npages = atoi(line);
-    pages = malloc(npages * sizeof(Page));
+    pages = (Page *)calloc(npages, sizeof(Page));
     NPAGES = npages;
     pclose(fp);
 
     /* Allocate one additional element - the overhead
      * is worth the convenience of being able to address
      * by actual section number! */
-    SECT = malloc((NSECTS + 1) * sizeof(Page*));
+    SECT = (Page **)calloc(NSECTS + 1, sizeof(Page*));
+
+    sect = (char *)calloc(2, sizeof(char));
 
     page_idx = 0;
-    for (sect = 1; sect <= NSECTS; ++sect) {
-        SECT[sect] = &pages[page_idx];
-        cmd[12] = ('0' + sect);
+    for (sect[0] = '1'; sect[0] <= '0' + NSECTS; ++sect[0]) {
+        SECT[sect[0] - '0'] = &pages[page_idx];
+        cmd[12] = sect[0];
         fp = popen(cmd, "r");
         if (fp == NULL) {
             fprintf(stderr, "Error; Could not load man pages.\n");
@@ -72,7 +74,7 @@ void pages_init() {
             toklen = strlen(tok);
             page->name = (char*) malloc((toklen+1) * sizeof(char));
             strcpy(page->name, tok);
-            page->sect = sect;
+            page->sect = strdup(sect);
             strtok(NULL, tok_delim);
             strtok(NULL, tok_delim);
             tok = strtok(NULL, "");
@@ -86,9 +88,9 @@ void pages_init() {
     }
 }
 
-Page *search_page(char sect, char *name) {
-    Page *inspect = SECT[(unsigned int) sect];
-    while (inspect->sect == sect) {
+Page *search_page(char *sect, char *name) {
+    Page *inspect = SECT[sect[0] - '0'];
+    while (!strncmp(inspect->sect, sect, 1)) {
         if (!strcmp(name, inspect->name))
             return inspect;
         inspect++;

@@ -23,7 +23,7 @@
 typedef struct _Page Page;
 
 struct _Page {
-    char sect;
+    char *sect;
     char *name;
     char *desc;
 };
@@ -34,6 +34,6 @@ extern unsigned int NPAGES;
 extern const unsigned char NSECTS;
 
 void pages_init();
-Page *search_page(char, char*);
+Page *search_page(char*, char*);
 
 #endif

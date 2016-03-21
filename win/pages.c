@@ -32,7 +32,7 @@
 
 int _current_row = 0;
 char *_current_name = NULL;
-int _current_sect = 0;
+char *_current_sect = NULL;
 int _prev_row = 0;
 int _page_start = 0;
 int _MAX_NAME_LEN = 20;
@@ -50,9 +50,6 @@ void win_page_show(Win *win) {
     Page *page;
     int max_desc_len;
     char *name, *desc;
-    char sect[2];
-
-    sect[1] = '\0';
 
     _MAX_NAME_LEN = win->c / 3;
     max_desc_len = win->c - _MAX_NAME_LEN - 7;
@@ -67,8 +64,7 @@ void win_page_show(Win *win) {
             continue;
         }
         page = &pages[page_off++];
-        sect[0] = '0' + page->sect;
-        mvwprintw(win->win, r, c, sect);
+        mvwprintw(win->win, r, c, page->sect);
         string_clean_buffer(name, page->name, _MAX_NAME_LEN);
         string_clean_buffer(desc, page->desc,  max_desc_len);
         mvwprintw(win->win, r, c + 2, name);
@@ -89,7 +85,7 @@ void win_page_show(Win *win) {
         _current_sect = pages[_page_start + _current_row].sect;
     } else {
         _current_name = NULL;
-        _current_sect = 0;
+        _current_sect = NULL;
     }
 
     free(name);
@@ -151,7 +147,7 @@ void _page(bool down) {
 }
 
 void _open_page() {
-    if (_current_name != NULL && _current_sect > 0)
+    if (_current_name != NULL && _current_sect != NULL)
         open_page(_current_sect, _current_name, "0");
 }
 

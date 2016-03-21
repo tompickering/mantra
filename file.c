@@ -66,7 +66,6 @@ void load_bookmarks() {
     int rc;
     char *name;
     char *line;
-    int section;
 
     DIE_UNLESS(mdb_txn_begin(env, NULL, MDB_RDONLY, &txn));
     DIE_UNLESS(mdb_cursor_open(txn, dbi, &cursor));
@@ -76,9 +75,8 @@ void load_bookmarks() {
         if (rc != MDB_SUCCESS) {
             die(mdb_strerror(rc));
         }
-        section = *((uint8_t*)key.mv_data) - '0';
-        name = ((char*)key.mv_data) + 2;
-        page = search_page(section, name);
+        name = ((char *)key.mv_data) + 2;
+        page = search_page(key.mv_data, name);
 
         if (page != NULL) {
             line = calloc(1, val.mv_size + 1);
@@ -180,11 +178,14 @@ int delete_bookmark_for_page(Page *page) {
     int rc;
 
     p = sectpage;
-    *(p++) = '0' + page->sect;
+    *(p++) = page->sect[0];
     *(p++) = ':';
     p = strcpy(p, page->name);
 
     STR2VAL(&key, sectpage);
+
+    /* FIXME */
+    sectpage[1] = '\0';
 
     DIE_UNLESS(mdb_txn_begin(env, NULL, 0, &txn));
 
@@ -231,12 +232,15 @@ int add_bookmark(Page *page, char *line, Bookmark *update) {
     int rc, updating = 0;
 
     p = sectpage;
-    *(p++) = '0' + page->sect;
+    *(p++) = page->sect[0];
     *(p++) = ':';
     p = strcpy(p, page->name);
 
     STR2VAL(&key, sectpage);
     STR2VAL(&val, line);
+
+    /* FIXME */
+    sectpage[1] = '\0';
 
     DIE_UNLESS(mdb_txn_begin(env, NULL, 0, &txn));
     DIE_UNLESS(mdb_cursor_open(txn, dbi, &cursor));

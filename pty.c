@@ -76,7 +76,7 @@ int init_tty_raw(int fd, struct termios *tty_base_attrs) {
     return 0;
 }
 
-void run_pty(char *cmd, char *input) {
+void run_pty(char **cmd, char *input) {
     struct termios tty_attrs;
     struct winsize ws;
     pid_t child_pid;
@@ -97,9 +97,6 @@ void run_pty(char *cmd, char *input) {
 
     if (child_pid == 0) {
         int slave;
-
-        /* TODO: Get user's preferred shell */
-        char *shell = "/bin/sh";
 
         setsid();
         grantpt(master);
@@ -128,14 +125,10 @@ void run_pty(char *cmd, char *input) {
          * duplicate descriptors */
         close(slave);
 
-        /* Replace child with shell running
-         * requested command */
-        if (shell == NULL || *shell == '\0')
-            shell = "/bin/sh";
 
-        execlp(shell, shell, "-c", cmd, NULL);
+        execvp(cmd[0], cmd);
 
-        /* Only reached if execlp fails */
+        /* Only reached if execvp fails */
         die(NULL);
 
     } else {

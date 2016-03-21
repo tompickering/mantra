@@ -76,12 +76,9 @@ void win_bookmarks_show(Win *win) {
     char *name;
     char *line;
     char *desc;
-    char sect[2];
     int line_int;
     int line_pad;
     Page *page;
-
-    sect[1] = '\0';
 
     max_name_len = win->c / 6;
     max_line_len = (max_name_len < 6) ? max_name_len : 6;
@@ -101,12 +98,11 @@ void win_bookmarks_show(Win *win) {
 
     for (; bm != NULL && r < win->r - 1; ++r) {
         page = bm->page;
-        sect[0] = '0' + page->sect;
         line_int = atoi(bm->line);
         line_pad = max_line_len - log10((float) line_int);
         if (line_pad < 0) line_pad = 0;
         if (line_int != 1) line_pad++;
-        mvwprintw(win->win, r, c, sect);
+        mvwprintw(win->win, r, c, page->sect);
         string_clean_buffer(name, page->name, max_name_len);
         string_clean_buffer(line,   bm->line, max_line_len);
         string_clean_buffer(desc, page->desc, max_desc_len);

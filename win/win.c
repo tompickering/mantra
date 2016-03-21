@@ -234,21 +234,11 @@ char *string_clean_buffer(char *buf, char *src, unsigned int len) {
 /**
  * Spawn a 'man' process displaying the requested page.
  */
-void open_page(char sect, char *page, char *line) {
-    char *cmd;
-    char *cr;
+void open_page(char *sect, char *page, char *line) {
+    char *cmd[] = { "man", "--pager=less", sect, page, NULL };
     int line_str_len;
-    char sect_str[3];
     char *line_str = "0g";
-    int cmd_len = strlen(page) + 20; /* len("man --pager=less x \0") == 20*/
-
-    sprintf(sect_str, "%c ", '0'+sect);
-    cmd = (char *)malloc(cmd_len * sizeof(char));
-
-    cr = cmd;
-    cr = stpcpy(cr, "man --pager=less ");
-    cr = stpcpy(cr, sect_str);
-    cr = stpcpy(cr, page);
+    char *cr;
 
     if (line) {
         line_str_len = strlen(line);
@@ -263,7 +253,6 @@ void open_page(char sect, char *page, char *line) {
     endwin();
     run_pty(cmd, line_str);
 
-    free(cmd);
     if (line)
         free(line_str);
     refresh();
