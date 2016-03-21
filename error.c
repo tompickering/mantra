@@ -25,10 +25,10 @@
 #include <string.h>
 #include <errno.h>
 
-void die(char* msg) {
-    char* error_msg;
-    char* header = "Error";
-    char* separator = " - ";
+void die(char *msg) {
+    char *error_msg;
+    char *header = "Error";
+    char *separator = " - ";
     int header_len = strlen(header);
     int separator_len = strlen(separator);
     int msg_len = header_len;
@@ -51,7 +51,7 @@ void die(char* msg) {
     exit(1);
 }
 
-void die_msg(char* msg) {
+void die_msg(char *msg) {
     fprintf(stderr, "Error: %s.\n", msg);
     exit(1);
 }

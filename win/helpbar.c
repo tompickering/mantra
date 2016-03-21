@@ -27,7 +27,7 @@ const char helpstr[] = "b-Bookmark  /-Search  Space-Switch  o-Open  jk-Navigate 
 void draw_win_helpbar() {
     int cols;
     int helplen, xoff;
-    Win* win = wins[WIN_IDX_HELPBAR];
+    Win *win = wins[WIN_IDX_HELPBAR];
     /* Use xoff here to prevent gcc  complaining about unused 'rows' var */
     getmaxyx(win->win, xoff, cols);
     helplen = strlen(helpstr);

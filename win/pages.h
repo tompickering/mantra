@@ -24,6 +24,6 @@
 
 #include "../page.h"
 
-Page* get_current_page();
+Page *get_current_page();
 
 #endif

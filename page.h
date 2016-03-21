@@ -24,16 +24,16 @@ typedef struct _Page Page;
 
 struct _Page {
     char sect;
-    char* name;
-    char* desc;
+    char *name;
+    char *desc;
 };
 
-extern Page* pages;
-extern Page** SECT;
+extern Page *pages;
+extern Page **SECT;
 extern unsigned int NPAGES;
 extern const unsigned char NSECTS;
 
 void pages_init();
-Page* search_page(char, char*);
+Page *search_page(char, char*);
 
 #endif

@@ -45,7 +45,7 @@ void ncurses_close() {
     endwin();
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
     int ch = 0;
     bool running = true;
 

@@ -30,13 +30,13 @@
 typedef struct _Bookmark Bookmark;
 
 struct _Bookmark {
-    Page* page;
-    char* line;
-    Bookmark* prev;
-    Bookmark* next;
+    Page *page;
+    char *line;
+    Bookmark *prev;
+    Bookmark *next;
 };
 
-extern Bookmark* bookmarks;
+extern Bookmark *bookmarks;
 
 void insert_bookmark(Page*, char*);
 void update_bookmark_for_page(Page*, char*);

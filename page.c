@@ -23,8 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-Page* pages = NULL;
-Page** SECT;
+Page *pages = NULL;
+Page **SECT;
 unsigned int NPAGES;
 const unsigned char NSECTS = 9;
 
@@ -34,17 +34,16 @@ const unsigned char NSECTS = 9;
  * the information in a data construct ('pages').
  */
 void pages_init() {
-    FILE* fp;
+    FILE *fp;
     int npages;
     unsigned char sect;
     int page_idx;
     char tok_delim[2] = " ";
     char cmd[] = "man -k . -s    2>/dev/null | sort";
-    char* line = NULL;
-    char* tok = NULL;
+    char *line, *tok = NULL;
     size_t len = 0;
     size_t toklen;
-    Page* page = NULL;
+    Page *page = NULL;
 
     fp = popen("man -k . | wc -l", "r");
     getline(&line, &len, fp);
@@ -87,8 +86,8 @@ void pages_init() {
     }
 }
 
-Page* search_page(char sect, char* name) {
-    Page* inspect = SECT[(unsigned int) sect];
+Page *search_page(char sect, char *name) {
+    Page *inspect = SECT[(unsigned int) sect];
     while (inspect->sect == sect) {
         if (!strcmp(name, inspect->name))
             return inspect;

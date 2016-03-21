@@ -42,7 +42,7 @@ const int WIN_IDX_BOOKPNL   = 3;
 const int WIN_IDX_SEARCHPNL = 4;
 const int NWIN              = 5;
 
-Win** wins;
+Win **wins;
 int win_act_idx;
 int pnl_act_idx;
 
@@ -57,9 +57,9 @@ void input_default(int n) {
 
 void win_init_all() {
     int i;
-    wins = (Win**) calloc(NWIN, sizeof(Win*));
+    wins = (Win **)calloc(NWIN, sizeof(Win *));
     for (i = 0; i < NWIN; ++i) {
-        wins[i] = (Win*) calloc(1, sizeof(Win));
+        wins[i] = (Win *)calloc(1, sizeof(Win));
         wins[i]->win = newwin(0, 0, 0, 0);
         wins[i]->pnl = new_panel(wins[i]->win);
     }
@@ -111,8 +111,8 @@ void win_init_all() {
 /**
  * Update a window's position and size attributes.
  */
-void win_update(Win* window, int x, int y, int r, int c) {
-    WINDOW* win = window->win;
+void win_update(Win *window, int x, int y, int r, int c) {
+    WINDOW *win = window->win;
     wresize(win, r, c);
     mvwin(win, y, x);
     window->r = r;
@@ -123,9 +123,9 @@ void win_update(Win* window, int x, int y, int r, int c) {
 /**
  * Overwrite a row of characters in a window with spaces.
  */
-void win_clear_row(Win* win, int r) {
+void win_clear_row(Win *win, int r) {
     char wipe_char = ' ';
-    char* wiper = (char*) malloc((win->c + 1) * sizeof(char));
+    char *wiper = (char *)malloc((win->c + 1) * sizeof(char));
     memset(wiper, wipe_char, win->c);
     wiper[win->c] = '\0';
     mvwprintw(win->win, r, 0, wiper);
@@ -139,11 +139,11 @@ void win_clear_row(Win* win, int r) {
  */
 void win_clear_all() {
     int i, j, r, c;
-    WINDOW* win;
-    char* wiper;
+    WINDOW *win;
+    char *wiper;
     char wipe_char = ' ';
     getmaxyx(stdscr, r, c);
-    wiper = (char*) malloc((c + 1) * sizeof(char));
+    wiper = (char *)malloc((c + 1) * sizeof(char));
     memset(wiper, wipe_char, c);
     wiper[c] = '\0';
     for (i = 0; i < NWIN; ++i) {
@@ -177,9 +177,9 @@ int win_active() {
     return win_act_idx;
 }
 
-void win_draw_border(Win* win) {
+void win_draw_border(Win *win) {
     int col_pair = WIN_COL_PAIR_NORMAL;
-    Win* pnl = active_pnl();
+    Win *pnl = active_pnl();
     if (win == pnl)
         col_pair = WIN_COL_PAIR_PANELS;
     else if (wins[win_act_idx] == win)
@@ -203,11 +203,11 @@ void win_draw_all() {
     }
 }
 
-Win* active_win() {
+Win *active_win() {
     return wins[win_act_idx];
 }
 
-Win* active_pnl() {
+Win *active_pnl() {
     if (pnl_act_idx < 0)
         return NULL;
     return wins[pnl_act_idx];
@@ -217,7 +217,7 @@ Win* active_pnl() {
  * Copy a string into a buffer to a max of len bytes.
  * Furthermore, ensure that the buffer is clean and null-terminated.
  */
-char* string_clean_buffer(char* buf, char* src, unsigned int len) {
+char *string_clean_buffer(char *buf, char *src, unsigned int len) {
     int src_len = strlen(src);
     int i, c;
     strncpy(buf, src, len);
@@ -234,16 +234,16 @@ char* string_clean_buffer(char* buf, char* src, unsigned int len) {
 /**
  * Spawn a 'man' process displaying the requested page.
  */
-void open_page(char sect, char* page, char* line) {
-    char* cmd;
-    char* cr;
+void open_page(char sect, char *page, char *line) {
+    char *cmd;
+    char *cr;
     int line_str_len;
     char sect_str[3];
-    char* line_str = "0g";
+    char *line_str = "0g";
     int cmd_len = strlen(page) + 20; /* len("man --pager=less x \0") == 20*/
 
     sprintf(sect_str, "%c ", '0'+sect);
-    cmd = (char*) malloc(cmd_len * sizeof(char));
+    cmd = (char *)malloc(cmd_len * sizeof(char));
 
     cr = cmd;
     cr = stpcpy(cr, "man --pager=less ");
@@ -254,7 +254,7 @@ void open_page(char sect, char* page, char* line) {
         line_str_len = strlen(line);
 
         /* 2 extra characters for 'g' and \0 */
-        line_str = (char*) malloc(line_str_len + 2);
+        line_str = (char *)malloc(line_str_len + 2);
         cr = line_str;
         cr = stpcpy(cr, line);
         cr = stpcpy(cr, "g");
@@ -271,13 +271,13 @@ void open_page(char sect, char* page, char* line) {
 }
 
 void open_panel(int pnl_idx) {
-    Win* win = wins[pnl_idx];
+    Win *win = wins[pnl_idx];
     pnl_act_idx = pnl_idx;
     show_panel(win->pnl);
 }
 
 void close_panel() {
-    Win* win;
+    Win *win;
     if (pnl_act_idx >= 0) {
         win = wins[pnl_act_idx];
         hide_panel(win->pnl);

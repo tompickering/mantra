@@ -24,6 +24,6 @@
 
 #include "../file.h"
 
-Bookmark* get_current_bm();
+Bookmark *get_current_bm();
 
 #endif

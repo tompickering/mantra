@@ -34,13 +34,13 @@
 
 int _current_row_bm = 0;
 int _prev_row_bm = 0;
-Bookmark* _bm_start = NULL;
-Bookmark* _current_bm = NULL;
-char* _bm_search = NULL;
+Bookmark *_bm_start = NULL;
+Bookmark *_current_bm = NULL;
+char *_bm_search = NULL;
 
 void reset_win_bookmarks() {
     if (_prev_row_bm) {
-        Win* win = wins[WIN_IDX_BOOKMARKS];
+        Win *win = wins[WIN_IDX_BOOKMARKS];
         mvwchgat(win->win, _prev_row_bm + 1, 1, win->c - 2, A_NORMAL, WIN_COL_PAIR_NORMAL, NULL);
     }
 
@@ -50,7 +50,7 @@ void reset_win_bookmarks() {
     _current_bm = NULL;
 }
 
-Bookmark* get_current_bm() {
+Bookmark *get_current_bm() {
     return _current_bm;
 }
 
@@ -63,23 +63,23 @@ void _update_current_bm() {
     }
 }
 
-void win_bookmarks_show(Win* win) {
+void win_bookmarks_show(Win *win) {
     /* TODO: Deduplicate with pages code */
     int r = 1;
     int c = 2;
     int col_pair;
-    Bookmark* bm;
+    Bookmark *bm;
     int max_name_len;
     int max_line_len;
     int max_desc_len;
     int desc_x;
-    char* name;
-    char* line;
-    char* desc;
+    char *name;
+    char *line;
+    char *desc;
     char sect[2];
     int line_int;
     int line_pad;
-    Page* page;
+    Page *page;
 
     sect[1] = '\0';
 
@@ -140,15 +140,15 @@ void win_bookmarks_show(Win* win) {
 }
 
 void draw_win_bookmarks() {
-    Win* win = wins[WIN_IDX_BOOKMARKS];
+    Win *win = wins[WIN_IDX_BOOKMARKS];
     win_bookmarks_show(win);
     win_draw_border(win);
     wrefresh(win->win);
 }
 
 void _page_bm(bool down) {
-    Win* win = wins[WIN_IDX_BOOKMARKS];
-    Bookmark* bm = _bm_start;
+    Win *win = wins[WIN_IDX_BOOKMARKS];
+    Bookmark *bm = _bm_start;
     int i;
 
     if (!_current_bm) return;
@@ -173,7 +173,7 @@ void _page_bm(bool down) {
 }
 
 char _navigate_bm(bool down) {
-    Win* win = wins[WIN_IDX_BOOKMARKS];
+    Win *win = wins[WIN_IDX_BOOKMARKS];
     if (down) {
         if (_current_bm && _current_bm->next && _current_row_bm + 3 < win->r) {
             ++_current_row_bm;
@@ -195,7 +195,7 @@ char _navigate_bm(bool down) {
 }
 
 void _jump_to_end_bm(bool end) {
-    Win* win = wins[WIN_IDX_BOOKMARKS];
+    Win *win = wins[WIN_IDX_BOOKMARKS];
 
     if (!_current_bm) return;
 
@@ -231,9 +231,7 @@ void _open_bm() {
 }
 
 void _delete_bm() {
-    Bookmark* prev;
-    Bookmark* next;
-    Bookmark* to_erase;
+    Bookmark *prev, *next, *to_erase;
     if (_current_bm != NULL) {
         prev = _current_bm->prev;
         next = _current_bm->next;
@@ -256,12 +254,12 @@ void _delete_bm() {
     }
 }
 
-void search_bmwin(bool down, char* term) {
-    Bookmark* start = _current_bm;
+void search_bmwin(bool down, char *term) {
+    Bookmark *start = _current_bm;
 
     if (term) {
         if (_bm_search) free(_bm_search);
-        _bm_search = (char*) malloc(strlen(term) + 1);
+        _bm_search = (char *)malloc(strlen(term) + 1);
         strcpy(_bm_search, term);
     }
 
@@ -310,7 +308,7 @@ void input_win_bookmarks(int ch) {
 }
 
 void update_win_bookmarks() {
-    Win* win = wins[WIN_IDX_BOOKMARKS];
+    Win *win = wins[WIN_IDX_BOOKMARKS];
     int r = win->r;
     int i;
 

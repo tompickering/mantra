@@ -25,7 +25,7 @@
 
 extern float PNL_SF_W;
 
-void get_dims(int* r, int* c);
+void get_dims(int *r, int *c);
 void draw_windows(int r, int c);
 void draw_screen();
 

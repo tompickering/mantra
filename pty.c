@@ -49,7 +49,7 @@
 
 #include "error.h"
 
-int init_tty_raw(int fd, struct termios* tty_base_attrs) {
+int init_tty_raw(int fd, struct termios *tty_base_attrs) {
     struct termios tty_raw_attrs;
 
     memcpy(&tty_raw_attrs, tty_base_attrs, sizeof(struct termios));
@@ -75,7 +75,7 @@ int init_tty_raw(int fd, struct termios* tty_base_attrs) {
     return 0;
 }
 
-void run_pty(char* cmd, char* input) {
+void run_pty(char *cmd, char *input) {
     struct termios tty_attrs;
     struct winsize ws;
     pid_t child_pid;
@@ -98,7 +98,7 @@ void run_pty(char* cmd, char* input) {
         int slave;
 
         /* TODO: Get user's preferred shell */
-        char* shell = "/bin/sh";
+        char *shell = "/bin/sh";
 
         setsid();
         grantpt(master);

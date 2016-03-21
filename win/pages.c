@@ -31,26 +31,25 @@
 #include "../page.h"
 
 int _current_row = 0;
-char* _current_name = NULL;
+char *_current_name = NULL;
 int _current_sect = 0;
 int _prev_row = 0;
 int _page_start = 0;
 int _MAX_NAME_LEN = 20;
-char* _page_search = NULL;
+char *_page_search = NULL;
 
-Page* get_current_page() {
+Page *get_current_page() {
     return &pages[_page_start + _current_row];
 }
 
-void win_page_show(Win* win) {
+void win_page_show(Win *win) {
     int r = 1;
     int c = 2;
     int col_pair;
     int page_off = _page_start;
-    Page* page;
+    Page *page;
     int max_desc_len;
-    char* name;
-    char* desc;
+    char *name, *desc;
     char sect[2];
 
     sect[1] = '\0';
@@ -98,14 +97,14 @@ void win_page_show(Win* win) {
 }
 
 void draw_win_pages() {
-    Win* win = wins[WIN_IDX_PAGES];
+    Win *win = wins[WIN_IDX_PAGES];
     win_page_show(win);
     win_draw_border(win);
     wrefresh(win->win);
 }
 
 void _jump_to_end(bool end) {
-    Win* win = wins[WIN_IDX_PAGES];
+    Win *win = wins[WIN_IDX_PAGES];
     if (end) {
         _current_row = win->r - 3;
         _page_start = NPAGES - win->r + 2;
@@ -116,7 +115,7 @@ void _jump_to_end(bool end) {
 }
 
 char _navigate(bool down) {
-    Win* win = wins[WIN_IDX_PAGES];
+    Win *win = wins[WIN_IDX_PAGES];
     if (down) {
         if (_current_row + 3 < win->r) {
             ++_current_row;
@@ -137,7 +136,7 @@ char _navigate(bool down) {
 }
 
 void _page(bool down) {
-    Win* win = wins[WIN_IDX_PAGES];
+    Win *win = wins[WIN_IDX_PAGES];
     if (down) {
         if (_page_start + 2 * (win->r - 2) < NPAGES) {
             _page_start += (win->r - 2);
@@ -156,9 +155,9 @@ void _open_page() {
         open_page(_current_sect, _current_name, "0");
 }
 
-void search_pagewin(bool down, char* term) {
-    Page* start = get_current_page();
-    Page* page;
+void search_pagewin(bool down, char *term) {
+    Page *start = get_current_page();
+    Page *page;
 
     if (term) {
         if (_page_search) free(_page_search);
@@ -223,7 +222,7 @@ void input_win_pages(int ch) {
 }
 
 void update_win_pages() {
-    Win* win = wins[WIN_IDX_PAGES];
+    Win *win = wins[WIN_IDX_PAGES];
     int r = win->r;
 
     if (_current_row > r - 3) {

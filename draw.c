@@ -28,7 +28,7 @@
 float PNL_SF_W = 0.6;
 float PNL_SF_H = 0.5;
 
-void get_dims(int* r, int* c) {
+void get_dims(int *r, int *c) {
     getmaxyx(stdscr, *r, *c);
 }
 

@@ -49,7 +49,7 @@
     (d)->mv_size = strlen(v) + 1;\
 } while(0)
 
-Bookmark* bookmarks = NULL;
+Bookmark *bookmarks = NULL;
 MDB_env *env;
 MDB_dbi dbi;
 
@@ -57,15 +57,15 @@ MDB_dbi dbi;
  * Load bookmarks from DB.
  */
 void load_bookmarks() {
-    Bookmark* current_bm = bookmarks;
-    Bookmark* prev_bm = NULL;
-    Page* page;
+    Bookmark *current_bm = bookmarks;
+    Bookmark *prev_bm = NULL;
+    Page *page;
     MDB_txn *txn;
     MDB_cursor *cursor;
     MDB_val key, val;
     int rc;
-    char* name;
-    char* line;
+    char *name;
+    char *line;
     int section;
 
     DIE_UNLESS(mdb_txn_begin(env, NULL, MDB_RDONLY, &txn));
@@ -110,7 +110,7 @@ void load_bookmarks() {
 /**
  * Remove a bookmark from the list.
  */
-void rm_bookmark(Bookmark* bm) {
+void rm_bookmark(Bookmark *bm) {
     if (bm != NULL) {
         if (bm->prev != NULL) bm->prev->next = bm->next;
         if (bm->next != NULL) bm->next->prev = bm->prev;
@@ -123,8 +123,8 @@ void rm_bookmark(Bookmark* bm) {
 /**
  * Remove a bookmark from the list, based on a page.
  */
-void rm_bookmark_for_page(Page* page) {
-    Bookmark* bm = bookmarks;
+void rm_bookmark_for_page(Page *page) {
+    Bookmark *bm = bookmarks;
 
     if (bm != NULL)
         while (bm->next && bm->page != page)
@@ -137,9 +137,9 @@ void rm_bookmark_for_page(Page* page) {
 /**
  * Insert a bookmark at the end of the list.
  */
-void insert_bookmark(Page* page, char* line) {
-    Bookmark* bm = (Bookmark*) malloc(sizeof(Bookmark));
-    Bookmark* last_bm = bookmarks;
+void insert_bookmark(Page *page, char *line) {
+    Bookmark *bm = (Bookmark*) malloc(sizeof(Bookmark));
+    Bookmark *last_bm = bookmarks;
 
     if (last_bm != NULL)
         while (last_bm->next)
@@ -158,8 +158,8 @@ void insert_bookmark(Page* page, char* line) {
 /**
  * Update a bookmark in the list, based on a page.
  */
-void update_bookmark_for_page(Page* page, char* line) {
-    Bookmark* bm = bookmarks;
+void update_bookmark_for_page(Page *page, char *line) {
+    Bookmark *bm = bookmarks;
 
     if (bm != NULL)
         while (bm->page != page && bm->next)
@@ -173,7 +173,7 @@ void update_bookmark_for_page(Page* page, char* line) {
 /**
  * Remove a bookmark from the DB, based on the page.
  */
-int delete_bookmark_for_page(Page* page) {
+int delete_bookmark_for_page(Page *page) {
     char *p, *sectpage = (char*) malloc(strlen(page->name) + 3);
     MDB_txn *txn;
     MDB_val key;
@@ -202,7 +202,7 @@ int delete_bookmark_for_page(Page* page) {
 /**
  * Remove a bookmark from the list and DB.
  */
-int erase_bookmark(Bookmark* bm) {
+int erase_bookmark(Bookmark *bm) {
     if (delete_bookmark_for_page(bm->page))
         return -1;
     rm_bookmark(bm);
@@ -212,7 +212,7 @@ int erase_bookmark(Bookmark* bm) {
 /**
  * Remove a bookmark from the list and DB, based on a page.
  */
-int erase_bookmark_for_page(Page* page) {
+int erase_bookmark_for_page(Page *page) {
     if (delete_bookmark_for_page(page))
         return -1;
     rm_bookmark_for_page(page);
@@ -223,7 +223,7 @@ int erase_bookmark_for_page(Page* page) {
  * Create a bookmark entry in the DB.
  * If 'update' is specified, update this bookmark entry.
  */
-int add_bookmark(Page* page, char* line, Bookmark* update) {
+int add_bookmark(Page *page, char *line, Bookmark *update) {
     MDB_val key, val, oldval;
     MDB_txn *txn;
     MDB_cursor *cursor;
@@ -284,7 +284,7 @@ int add_bookmark(Page* page, char* line, Bookmark* update) {
 /**
  * Create and open a database file to store bookmarks.
  */
-void db_init(char* dir) {
+void db_init(char *dir) {
     char *p, *db_path;
 	MDB_txn *txn;
 
@@ -308,7 +308,7 @@ void db_init(char* dir) {
  * and open a gdbm database for bookmarks.
  */
 void file_init() {
-    char* usr_home = NULL;
+    char *usr_home = NULL;
     char *p, *mantra_home;
 
     usr_home = getenv("HOME");
@@ -343,7 +343,7 @@ void file_init() {
  * Free the entire bookmark list.
  */
 void free_bookmarks() {
-    Bookmark* head = bookmarks;
+    Bookmark *head = bookmarks;
 
     while (bookmarks != NULL) {
         bookmarks = bookmarks->next;

@@ -33,16 +33,16 @@
 #include "../file.h"
 #include "../error.h"
 
-FORM* bookpnl_form;
-FIELD* bookpnl_field_bookmark;
+FORM *bookpnl_form;
+FIELD *bookpnl_field_bookmark;
 
-FORM* searchpnl_form;
-FIELD* searchpnl_field_search;
+FORM *searchpnl_form;
+FIELD *searchpnl_field_search;
 
 void pnl_init_all() {
-    Win* win;
+    Win *win;
 
-    FIELD** fields = (FIELD**) malloc(2 * sizeof(FIELD*));
+    FIELD **fields = (FIELD **)malloc(2 * sizeof(FIELD *));
     fields[1] = NULL;
 
     win = wins[WIN_IDX_BOOKPNL];
@@ -71,7 +71,7 @@ void pnl_init_all() {
 }
 
 void draw_win_bookpnl() {
-    Win* win = wins[WIN_IDX_BOOKPNL];
+    Win *win = wins[WIN_IDX_BOOKPNL];
     if (panel_hidden(win->pnl))
         return;
     win_draw_border(win);
@@ -79,7 +79,7 @@ void draw_win_bookpnl() {
 }
 
 void draw_win_searchpnl() {
-    Win* win = wins[WIN_IDX_SEARCHPNL];
+    Win *win = wins[WIN_IDX_SEARCHPNL];
     if (panel_hidden(win->pnl))
         return;
     win_draw_border(win);
@@ -87,7 +87,7 @@ void draw_win_searchpnl() {
 }
 
 void _save_bookmark() {
-    char* bookmark;
+    char *bookmark;
     form_driver(bookpnl_form, REQ_VALIDATION);
     bookmark = field_buffer(bookpnl_field_bookmark, 0);
     *(strchr(bookmark, ' ')) = '\0';
@@ -95,7 +95,7 @@ void _save_bookmark() {
     if (active_win() == wins[WIN_IDX_PAGES]) {
         add_bookmark(get_current_page(), bookmark, NULL);
     } else if (active_win() == wins[WIN_IDX_BOOKMARKS]) {
-        Bookmark* bm = get_current_bm();
+        Bookmark *bm = get_current_bm();
         if (bm) add_bookmark(bm->page, bookmark, bm);
     }
 
@@ -119,7 +119,7 @@ void input_win_bookpnl(int ch) {
 }
 
 void perform_search() {
-    char* term;
+    char *term;
     form_driver(searchpnl_form, REQ_VALIDATION);
     term = field_buffer(searchpnl_field_search, 0);
     *(strchr(term, ' ')) = '\0';
