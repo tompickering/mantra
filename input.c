@@ -25,6 +25,21 @@
 #include "win/win.h"
 
 Key inp2key(int ch) {
+
+    /* Alternatives */
+    switch (ch) {
+        case '\t': return K_CYCLE;
+        case '\r': return K_OPEN;
+        case KEY_DOWN: return K_DOWN;
+        case KEY_UP: return K_UP;
+        case 'd': return K_BM_DEL;
+        case KEY_PPAGE: return K_BACK;
+        case KEY_NPAGE: return K_FWD;
+        case KEY_HOME: return K_HOME;
+        case KEY_END: return K_END;
+    }
+
+    /* Defaults */
     switch (ch) {
         case '0':               return K_0;
         case '1':               return K_1;
