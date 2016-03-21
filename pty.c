@@ -46,6 +46,7 @@
 #include <sys/ioctl.h>
 #include <stdio.h>
 #include <termios.h>
+#include <errno.h>
 
 #include "error.h"
 
@@ -161,8 +162,16 @@ void run_pty(char *cmd, char *input) {
             FD_SET(master, &input_fd_set);
 
             /* Filter descriptors out of fd_set if no input to read */
-            if (select(master + 1, &input_fd_set, NULL, NULL, NULL) == -1)
-                die(NULL);
+            if (select(master + 1, &input_fd_set, NULL, NULL, NULL) == -1) {
+                switch (errno) {
+                    case EINTR:
+                        /* TODO: Resize pty terminal */
+                        break;
+                    default:
+                        die(NULL);
+                        break;
+                }
+            }
 
             /* stdin -> pty */
             if (FD_ISSET(STDIN_FILENO, &input_fd_set)) {
