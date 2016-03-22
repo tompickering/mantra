@@ -17,8 +17,6 @@
  *                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#define _GNU_SOURCE /* Needed for strcasestr() definition */
-
 #include "pages.h"
 #include "win.h"
 
@@ -29,6 +27,7 @@
 
 #include "../input.h"
 #include "../page.h"
+#include "../re.h"
 
 int _current_row = 0;
 char *_current_name = NULL;
@@ -163,7 +162,7 @@ void search_pagewin(bool down, char *term) {
     if (_page_search) {
         if (_navigate(down)) _jump_to_end(!down);
         page = get_current_page();
-        while (strcasestr(page->name, _page_search) == NULL) {
+        while (!matches_regex(page->name, _page_search)) {
             if (_navigate(down)) _jump_to_end(!down);
             page = get_current_page();
             if (page == start) break;

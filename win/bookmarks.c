@@ -17,8 +17,6 @@
  *                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-#define _GNU_SOURCE /* Needed for strcasestr() definition */
-
 #include "bookmarks.h"
 #include "win.h"
 
@@ -31,6 +29,7 @@
 #include "../input.h"
 #include "../page.h"
 #include "../file.h"
+#include "../re.h"
 
 int _current_row_bm = 0;
 int _prev_row_bm = 0;
@@ -261,7 +260,7 @@ void search_bmwin(bool down, char *term) {
 
     if (_current_bm && _bm_search) {
         if (_navigate_bm(down)) _jump_to_end_bm(!down);
-        while (_current_bm && strcasestr(_current_bm->page->name, _bm_search) == NULL) {
+        while (_current_bm && !matches_regex(_current_bm->page->name, _bm_search)) {
             if (_navigate_bm(down)) _jump_to_end_bm(!down);
             if (_current_bm == start) break;
         }
