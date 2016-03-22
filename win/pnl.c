@@ -109,8 +109,7 @@ void input_win_bookpnl(int ch) {
             close_panel();
             break;
         case KEY_BACKSPACE:
-            form_driver(bookpnl_form, REQ_LEFT_CHAR);
-            form_driver(bookpnl_form, REQ_DEL_CHAR);
+            form_driver(bookpnl_form, REQ_DEL_PREV);
             break;
         default:
             form_driver(bookpnl_form, ch);
@@ -141,8 +140,7 @@ void input_win_searchpnl(int ch) {
             close_panel();
             break;
         case KEY_BACKSPACE:
-            form_driver(searchpnl_form, REQ_LEFT_CHAR);
-            form_driver(searchpnl_form, REQ_DEL_CHAR);
+            form_driver(searchpnl_form, REQ_DEL_PREV);
             break;
         default:
             form_driver(searchpnl_form, ch);
