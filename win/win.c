@@ -235,10 +235,13 @@ char *string_clean_buffer(char *buf, char *src, unsigned int len) {
  * Spawn a 'man' process displaying the requested page.
  */
 void open_page(char *sect, char *page, char *line) {
-    char *cmd[] = { "man", "--pager=less", sect, page, NULL };
+    char *cmd[] = { "man", "--pager=less", NULL, NULL, NULL };
     int line_str_len;
     char *line_str = "0g";
     char *cr;
+
+    cmd[2] = sect;
+    cmd[3] = page;
 
     if (line) {
         line_str_len = strlen(line);
