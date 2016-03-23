@@ -12,6 +12,8 @@ LDLIBS=-lncursesw -lpanel -lmenu -lform -llmdb -lm
 NAME=mantra
 CFLAGS=-Wall -pedantic -g
 
+#CC=gcc -pg
+
 PREFIX = /usr/local
 
 %.d: %.c

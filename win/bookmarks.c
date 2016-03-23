@@ -26,6 +26,7 @@
 
 #include <ncurses.h>
 
+#include "layout.h"
 #include "../input.h"
 #include "../page.h"
 #include "../file.h"
@@ -36,6 +37,15 @@ int _prev_row_bm = 0;
 Bookmark *_bm_start = NULL;
 Bookmark *_current_bm = NULL;
 char *_bm_search = NULL;
+Layout *_bm_layout = NULL;
+
+void _bm_init_layout() {
+    _bm_layout = new_layout();
+    add_column(_bm_layout,  1, 0); /* Sect */
+    add_column(_bm_layout, 10, 0); /* Page */
+    add_column(_bm_layout, 10, 0); /* Line */
+    add_column(_bm_layout, 40, 0); /* Desc */
+}
 
 void reset_win_bookmarks() {
     if (_prev_row_bm) {
@@ -65,51 +75,52 @@ void _update_current_bm() {
 void win_bookmarks_show(Win *win) {
     /* TODO: Deduplicate with pages code */
     int r = 1;
-    int c = 2;
     int col_pair;
     Bookmark *bm;
-    int max_name_len;
-    int max_line_len;
-    int max_desc_len;
-    int desc_x;
+    char *sect;
     char *name;
     char *line;
     char *desc;
     int line_int;
     int line_pad;
     Page *page;
-
-    max_name_len = win->c / 6;
-    max_line_len = (max_name_len < 6) ? max_name_len : 6;
-    max_line_len--;
-    while (win->c / 3 - max_name_len - max_line_len > 1 + win->c/8)
-        max_name_len++;
-    if ((win->c / 3) % 2) max_name_len--;
-    max_desc_len = win->c - max_name_len - max_line_len - 9;
-    desc_x = c + 3 + win->c / 3;
-    name = malloc((max_name_len + 1) * sizeof(char));
-    line = malloc((max_line_len + 1) * sizeof(char));
-    desc = malloc((max_desc_len + 1) * sizeof(char));
+    unsigned int *xs;
+    unsigned int *ws;
 
     if (_bm_start == NULL) _bm_start = bookmarks;
+    if (_bm_layout == NULL) _bm_init_layout();
+
+    get_field_attrs(_bm_layout, win->c - 2, &xs, &ws);
+
+    sect = calloc(ws[0], sizeof(char));
+    name = calloc(ws[1], sizeof(char));
+    line = calloc(ws[2], sizeof(char));
+    desc = calloc(ws[3], sizeof(char));
 
     bm = _bm_start;
 
     for (; bm != NULL && r < win->r - 1; ++r) {
         page = bm->page;
         line_int = atoi(bm->line);
-        line_pad = max_line_len - log10((float) line_int);
+        line_pad = ws[2] - log10((float) line_int);
         if (line_pad < 0) line_pad = 0;
         if (line_int != 1) line_pad++;
-        mvwprintw(win->win, r, c, page->sect);
-        string_clean_buffer(name, page->name, max_name_len);
-        string_clean_buffer(line,   bm->line, max_line_len);
-        string_clean_buffer(desc, page->desc, max_desc_len);
-        mvwprintw(win->win, r, c + 2, name);
-        mvwprintw(win->win, r, c + 3 + max_name_len + line_pad - 1, line);
-        mvwprintw(win->win, r, desc_x, desc);
+
+        string_clean_buffer(sect, page->sect, ws[0]);
+        string_clean_buffer(name, page->name, ws[1]);
+        string_clean_buffer(line,   bm->line, ws[2]);
+        string_clean_buffer(desc, page->desc, ws[3]);
+
+        mvwprintw(win->win, r, 1 + xs[0], page->sect);
+        mvwprintw(win->win, r, 1 + xs[1], name);
+        mvwprintw(win->win, r, 1 + xs[2], line);
+        mvwprintw(win->win, r, 1 + xs[3], desc);
+
         bm = bm->next;
     }
+
+    free(xs);
+    free(ws);
 
     /* If we ran out of bookmarks to draw before we
      * got to the end of the window, finish up by
@@ -129,6 +140,7 @@ void win_bookmarks_show(Win *win) {
     /* Recalculate _current_bm */
     _update_current_bm();
 
+    free(sect);
     free(name);
     free(line);
     free(desc);
