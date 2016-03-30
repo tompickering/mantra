@@ -125,7 +125,7 @@ void win_update(Win *window, int x, int y, int r, int c) {
  */
 void win_clear_row(Win *win, int r) {
     char wipe_char = ' ';
-    char *wiper = (char *)malloc((win->c + 1) * sizeof(char));
+    char *wiper = (char *)calloc(win->c + 1, sizeof(char));
     memset(wiper, wipe_char, win->c);
     wiper[win->c] = '\0';
     mvwprintw(win->win, r, 0, wiper);

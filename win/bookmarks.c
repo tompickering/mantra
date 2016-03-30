@@ -92,10 +92,10 @@ void win_bookmarks_show(Win *win) {
 
     get_field_attrs(_bm_layout, win->c - 2, &xs, &ws);
 
-    sect = calloc(ws[0] + 1, sizeof(char));
-    name = calloc(ws[1] + 1, sizeof(char));
-    line = calloc(ws[2] + 1, sizeof(char));
-    desc = calloc(ws[3] + 1, sizeof(char));
+    sect = (char *)calloc(ws[0] + 1, sizeof(char));
+    name = (char *)calloc(ws[1] + 1, sizeof(char));
+    line = (char *)calloc(ws[2] + 1, sizeof(char));
+    desc = (char *)calloc(ws[3] + 1, sizeof(char));
 
     bm = _bm_start;
 

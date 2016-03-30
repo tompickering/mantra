@@ -24,15 +24,15 @@
 
 Layout* new_layout() {
     /* Zeroed memory; ncols = 0, cols = NULL */
-    return (Layout *) calloc(1, sizeof(Layout));
+    return (Layout *)calloc(1, sizeof(Layout));
 }
 
 void add_column(Layout *l, unsigned int weight, unsigned int max_w) {
     l->ncols++;
     if (!l->cols)
-        l->cols = (Column *) malloc(sizeof(Column));
+        l->cols = (Column *)malloc(sizeof(Column));
     else
-        l->cols = (Column *) realloc(l->cols, l->ncols * sizeof(Column));
+        l->cols = (Column *)realloc(l->cols, l->ncols * sizeof(Column));
 
     l->cols[l->ncols - 1].weight = weight;
     l->cols[l->ncols - 1].max_width = max_w;
