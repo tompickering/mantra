@@ -25,6 +25,7 @@
 
 #include <ncurses.h>
 
+#include "layout.h"
 #include "../input.h"
 #include "../page.h"
 #include "../re.h"
@@ -34,8 +35,15 @@ char *_current_name = NULL;
 char *_current_sect = NULL;
 int _prev_row = 0;
 int _page_start = 0;
-int _MAX_NAME_LEN = 20;
 char *_page_search = NULL;
+Layout *_page_layout = NULL;
+
+void _page_init_layout() {
+    _page_layout = new_layout();
+    add_column(_page_layout,  1, 0); /* Sect */
+    add_column(_page_layout, 20, 0); /* Page */
+    add_column(_page_layout, 40, 0); /* Desc */
+}
 
 Page *get_current_page() {
     return &pages[_page_start + _current_row];
@@ -43,32 +51,42 @@ Page *get_current_page() {
 
 void win_page_show(Win *win) {
     int r = 1;
-    int c = 2;
     int col_pair;
     int page_off = _page_start;
     Page *page;
-    int max_desc_len;
-    char *name, *desc;
+    char *sect;
+    char *name;
+    char *desc;
+    unsigned int *xs;
+    unsigned int *ws;
 
-    _MAX_NAME_LEN = win->c / 3;
-    max_desc_len = win->c - _MAX_NAME_LEN - 7;
-    if(max_desc_len < 0)
-        max_desc_len = 0;
-    name = malloc((_MAX_NAME_LEN + 1) * sizeof(char));
-    desc = malloc((max_desc_len + 1) * sizeof(char));
+    if (_page_layout == NULL) _page_init_layout();
+
+    get_field_attrs(_page_layout, win->c - 2, &xs, &ws);
+
+    sect = (char *)calloc(ws[0] + 1, sizeof(char));
+    name = (char *)calloc(ws[1] + 1, sizeof(char));
+    desc = (char *)calloc(ws[2] + 1, sizeof(char));
 
     for (; r < win->r - 1; ++r) {
         if (page_off == NPAGES) {
             win_clear_row(win, r);
             continue;
         }
+
         page = &pages[page_off++];
-        mvwprintw(win->win, r, c, page->sect);
-        string_clean_buffer(name, page->name, _MAX_NAME_LEN);
-        string_clean_buffer(desc, page->desc,  max_desc_len);
-        mvwprintw(win->win, r, c + 2, name);
-        mvwprintw(win->win, r, c + 3 + _MAX_NAME_LEN, desc);
+
+        string_clean_buffer(sect, page->sect, ws[0]);
+        string_clean_buffer(name, page->name, ws[1]);
+        string_clean_buffer(desc, page->desc, ws[2]);
+
+        mvwprintw(win->win, r, 1 + xs[0], sect);
+        mvwprintw(win->win, r, 1 + xs[1], name);
+        mvwprintw(win->win, r, 1 + xs[2], desc);
     }
+
+    free(xs);
+    free(ws);
 
     col_pair = WIN_COL_PAIR_NORMAL;
     if (win == wins[win_act_idx])
@@ -87,6 +105,7 @@ void win_page_show(Win *win) {
         _current_sect = NULL;
     }
 
+    free(sect);
     free(name);
     free(desc);
 }
