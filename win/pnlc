@@ -70,22 +70,6 @@ void pnl_init_all() {
     post_form(searchpnl_form);
 }
 
-void draw_win_bookpnl() {
-    Win *win = wins[WIN_IDX_BOOKPNL];
-    if (panel_hidden(win->pnl))
-        return;
-    win_draw_border(win);
-    wrefresh(win->win);
-}
-
-void draw_win_searchpnl() {
-    Win *win = wins[WIN_IDX_SEARCHPNL];
-    if (panel_hidden(win->pnl))
-        return;
-    win_draw_border(win);
-    wrefresh(win->win);
-}
-
 void _save_bookmark() {
     char *bookmark;
     form_driver(bookpnl_form, REQ_VALIDATION);

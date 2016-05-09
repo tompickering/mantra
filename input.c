@@ -23,6 +23,7 @@
 
 #include "file.h"
 #include "win/win.h"
+#include "win/helpbar.h"
 
 Key inp2key(int ch) {
 
@@ -62,7 +63,7 @@ Key inp2key(int ch) {
         case K_DEFAULT_BACK:    return K_BACK;
         case K_DEFAULT_NEXT:    return K_NEXT;
         case K_DEFAULT_PREV:    return K_PREV;
-        case K_DEFAULT_BOOKPNL: return K_BOOKPNL;
+        case K_DEFAULT_BMARK:   return K_BMARK;
         case K_DEFAULT_SEARCH:  return K_SEARCH;
         case K_DEFAULT_RETURN:  return K_RETURN;
         case K_DEFAULT_BM_DEL:  return K_BM_DEL;
@@ -82,7 +83,7 @@ Key inp2key(int ch) {
 bool handle_input(int ch) {
     bool quit = false;
     Key k = inp2key(ch);
-    if (active_pnl() == NULL) {
+    if (bar_get_mode() == BAR_MODE_IDLE) {
         switch (k) {
             case K_CYCLE:
                 win_cycle_active();
@@ -95,17 +96,17 @@ bool handle_input(int ch) {
                 load_bookmarks();
                 reset_win_bookmarks();
                 break;
-            case K_BOOKPNL:
-                open_panel(WIN_IDX_BOOKPNL);
+            case K_BMARK:
+                bar_set_mode(BAR_MODE_BMARK);
                 break;
             case K_SEARCH:
-                open_panel(WIN_IDX_SEARCHPNL);
+                bar_set_mode(BAR_MODE_SEARCH);
                 break;
             default:
                 active_win()->input(ch);
         }
     } else {
-        active_pnl()->input(ch);
+        wins[WIN_IDX_HELPBAR]->input(ch);
     }
     return !quit;
 }

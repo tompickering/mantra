@@ -33,7 +33,7 @@
 #define K_DEFAULT_BACK    'b' + CTRL
 #define K_DEFAULT_NEXT    'n'
 #define K_DEFAULT_PREV    'N'
-#define K_DEFAULT_BOOKPNL 'b'
+#define K_DEFAULT_BMARK   'b'
 #define K_DEFAULT_SEARCH  '/'
 #define K_DEFAULT_RETURN  '\r'
 #define K_DEFAULT_BM_DEL  'x'
@@ -64,7 +64,7 @@ typedef enum Key {
     K_BACK,
     K_NEXT,
     K_PREV,
-    K_BOOKPNL,
+    K_BMARK,
     K_SEARCH,
     K_RETURN,
     K_BM_DEL,

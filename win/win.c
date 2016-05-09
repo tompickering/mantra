@@ -24,27 +24,23 @@
 #include <stdbool.h>
 
 #include <ncurses.h>
-#include <panel.h>
 
+#include "helpbar.h"
 #include "../file.h"
 #include "../pty.h"
 
 const int WIN_COL_PAIR_NORMAL      = 0;
 const int WIN_COL_PAIR_ACTIVE      = 1;
-const int WIN_COL_PAIR_PANELS      = 2;
-const int WIN_COL_PAIR_BOOKMARK_HL = 3;
-const int WIN_COL_PAIR_PAGE_HL     = 4;
+const int WIN_COL_PAIR_BOOKMARK_HL = 2;
+const int WIN_COL_PAIR_PAGE_HL     = 3;
 
 const int WIN_IDX_BOOKMARKS = 0;
 const int WIN_IDX_PAGES     = 1;
 const int WIN_IDX_HELPBAR   = 2;
-const int WIN_IDX_BOOKPNL   = 3;
-const int WIN_IDX_SEARCHPNL = 4;
-const int NWIN              = 5;
+const int NWIN              = 3;
 
 Win **wins;
 int win_act_idx;
-int pnl_act_idx;
 
 /**
  * Default input handler for windows. It should never be called,
@@ -61,51 +57,33 @@ void win_init_all() {
     for (i = 0; i < NWIN; ++i) {
         wins[i] = (Win *)calloc(1, sizeof(Win));
         wins[i]->win = newwin(0, 0, 0, 0);
-        wins[i]->pnl = new_panel(wins[i]->win);
     }
 
     wins[WIN_IDX_BOOKMARKS]->draw = draw_win_bookmarks;
     wins[WIN_IDX_PAGES    ]->draw = draw_win_pages;
     wins[WIN_IDX_HELPBAR  ]->draw = draw_win_helpbar;
-    wins[WIN_IDX_BOOKPNL  ]->draw = draw_win_bookpnl;
-    wins[WIN_IDX_SEARCHPNL]->draw = draw_win_searchpnl;
 
     wins[WIN_IDX_BOOKMARKS]->input = input_win_bookmarks;
     wins[WIN_IDX_PAGES    ]->input = input_win_pages;
-    wins[WIN_IDX_HELPBAR  ]->input = input_default;
-    wins[WIN_IDX_BOOKPNL  ]->input = input_win_bookpnl;
-    wins[WIN_IDX_SEARCHPNL]->input = input_win_searchpnl;
+    wins[WIN_IDX_HELPBAR  ]->input = input_win_helpbar;
 
     wins[WIN_IDX_BOOKMARKS]->update = update_win_bookmarks;
     wins[WIN_IDX_PAGES    ]->update = update_win_pages;
     wins[WIN_IDX_HELPBAR  ]->update = NULL;
-    wins[WIN_IDX_BOOKPNL  ]->update = NULL;
-    wins[WIN_IDX_SEARCHPNL]->update = NULL;
 
     wins[WIN_IDX_BOOKMARKS]->can_be_active = true;
     wins[WIN_IDX_PAGES    ]->can_be_active = true;
     wins[WIN_IDX_HELPBAR  ]->can_be_active = false;
-    wins[WIN_IDX_BOOKPNL  ]->can_be_active = false;
-    wins[WIN_IDX_SEARCHPNL]->can_be_active = false;
-
-    hide_panel(wins[WIN_IDX_BOOKPNL  ]->pnl);
-    hide_panel(wins[WIN_IDX_SEARCHPNL]->pnl);
 
     init_pair(WIN_COL_PAIR_NORMAL     , COLOR_WHITE, COLOR_BLACK);
     init_pair(WIN_COL_PAIR_ACTIVE     , COLOR_GREEN, COLOR_BLACK);
-    init_pair(WIN_COL_PAIR_PANELS     , COLOR_BLUE , COLOR_BLACK);
     init_pair(WIN_COL_PAIR_BOOKMARK_HL, COLOR_BLUE , COLOR_BLACK);
     init_pair(WIN_COL_PAIR_PAGE_HL    , COLOR_GREEN, COLOR_BLACK);
 
     if (bookmarks) win_act_idx = WIN_IDX_BOOKMARKS;
     else win_act_idx = WIN_IDX_PAGES;
 
-    pnl_act_idx = -1;
-
-    pnl_init_all();
-
-    update_panels();
-    doupdate();
+    bar_form_init();
 }
 
 /**
@@ -179,10 +157,7 @@ int win_active() {
 
 void win_draw_border(Win *win) {
     int col_pair = WIN_COL_PAIR_NORMAL;
-    Win *pnl = active_pnl();
-    if (win == pnl)
-        col_pair = WIN_COL_PAIR_PANELS;
-    else if (wins[win_act_idx] == win)
+    if (wins[win_act_idx] == win)
         col_pair = WIN_COL_PAIR_ACTIVE;
     wattron(win->win, COLOR_PAIR(col_pair));
     box(win->win, 0, 0);
@@ -205,12 +180,6 @@ void win_draw_all() {
 
 Win *active_win() {
     return wins[win_act_idx];
-}
-
-Win *active_pnl() {
-    if (pnl_act_idx < 0)
-        return NULL;
-    return wins[pnl_act_idx];
 }
 
 /**
@@ -262,18 +231,3 @@ void open_page(char *sect, char *page, char *line) {
     win_clear_all();
 }
 
-void open_panel(int pnl_idx) {
-    Win *win = wins[pnl_idx];
-    pnl_act_idx = pnl_idx;
-    show_panel(win->pnl);
-}
-
-void close_panel() {
-    Win *win;
-    if (pnl_act_idx >= 0) {
-        win = wins[pnl_act_idx];
-        hide_panel(win->pnl);
-        pnl_act_idx = -1;
-    }
-    refresh();
-}

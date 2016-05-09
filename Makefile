@@ -8,7 +8,7 @@ OBJS := $(patsubst %.c,%.o,$(wildcard *.c **/*.c))
 DEPS = $(OBJS:%.o=%.d)
 CLEAN = $(NAME) $(OBJS) $(DEPS)
 
-LDLIBS=-lncursesw -lpanel -lmenu -lform -llmdb -lm
+LDLIBS=-lncursesw -lmenu -lform -llmdb -lm
 NAME=mantra
 CFLAGS=-Wall -pedantic -g
 

@@ -23,7 +23,6 @@
 #include <stdbool.h>
 
 #include <ncurses.h>
-#include <panel.h>
 
 #include "../input.h"
 
@@ -32,7 +31,6 @@ typedef struct _Win {
     unsigned int c;
     bool can_be_active;
     WINDOW *win;
-    PANEL *pnl;
     void (*draw)();
     void (*input)(int);
     void (*update)();
@@ -47,16 +45,12 @@ extern const int WIN_COL_PAIR_PAGE_HL;
 extern const int WIN_IDX_BOOKMARKS;
 extern const int WIN_IDX_PAGES;
 extern const int WIN_IDX_HELPBAR;
-extern const int WIN_IDX_BOOKPNL;
-extern const int WIN_IDX_SEARCHPNL;
 extern const int NWIN;
 
 extern Win **wins;
 extern int win_act_idx;
-extern int pnl_act_idx;
 
 void win_init_all();
-void pnl_init_all();
 void win_update(Win *, int, int, int, int);
 void win_clear_row(Win *, int);
 void win_clear_all();
@@ -68,22 +62,16 @@ void win_draw_all();
 void draw_win_bookmarks();
 void draw_win_pages();
 void draw_win_helpbar();
-void draw_win_bookpnl();
-void draw_win_searchpnl();
 void input_win_bookmarks(int);
 void input_win_pages(int);
+void input_win_helpbar(int);
 void reset_win_bookmarks();
-void input_win_bookpnl(int);
-void input_win_searchpnl(int);
 void search_pagewin(bool, char *);
 void search_bmwin(bool, char *);
 void update_win_pages();
 void update_win_bookmarks();
 Win *active_win();
-Win *active_pnl();
 char *string_clean_buffer(char *, char *, unsigned int);
 void open_page(char *, char *, char *);
-void open_panel(int);
-void close_panel(void);
 
 #endif
