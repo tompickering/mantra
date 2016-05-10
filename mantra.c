@@ -27,6 +27,7 @@
 #include "input.h"
 #include "draw.h"
 #include "win/win.h"
+#include "win/helpbar.h"
 
 volatile bool flag_sigwinch = false;
 
@@ -83,6 +84,18 @@ int main(int argc, char **argv) {
                     endwin();
                     refresh();
                     win_clear_all();
+
+                    /* FIXME
+                     * The window clear process seems
+                     * to interfere with any forms
+                     * posted to the status bar. Form
+                     * data should ideally persist,
+                     * however in the meantime,
+                     * resetting the bar is less
+                     * un-graceful.
+                     */
+                    bar_set_mode(BAR_MODE_IDLE);
+
                     draw_screen();
                 }
                 break;

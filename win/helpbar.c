@@ -61,6 +61,7 @@ BarMode bar_get_mode() {
 }
 
 void bar_set_mode(BarMode mode) {
+    Win *win = wins[WIN_IDX_HELPBAR];
     if (bar_mode != mode) {
         clean_helpbar();
         bar_mode = mode;
@@ -72,7 +73,7 @@ void bar_set_mode(BarMode mode) {
             unpost_form(bar_form_bmark);
             unpost_form(bar_form_search);
         }
-        refresh();
+        wrefresh(win->win);
     }
 }
 
