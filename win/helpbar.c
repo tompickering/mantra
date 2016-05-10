@@ -34,11 +34,9 @@
 #include "../file.h"
 #include "../error.h"
 
-FORM *bar_form_bmark;
-FIELD *bar_input_bmark;
-
-FORM *bar_form_search;
-FIELD *bar_input_search;
+FORM *bar_form = NULL;
+FIELD *bar_input = NULL;
+FIELD **bar_fields = NULL;
 
 BarMode bar_mode = BAR_MODE_IDLE;
 
@@ -65,13 +63,12 @@ void bar_set_mode(BarMode mode) {
     if (bar_mode != mode) {
         clean_helpbar();
         bar_mode = mode;
-        if (mode == BAR_MODE_BMARK) {
-            post_form(bar_form_bmark);
-        } else if (mode == BAR_MODE_SEARCH) {
-            post_form(bar_form_search);
-        } else if (mode == BAR_MODE_IDLE) {
-            unpost_form(bar_form_bmark);
-            unpost_form(bar_form_search);
+        if (mode == BAR_MODE_BMARK || mode == BAR_MODE_SEARCH) {
+            bar_form_init(mode);
+            post_form(bar_form);
+        } else if (mode == BAR_MODE_IDLE && bar_form != NULL) {
+            unpost_form(bar_form);
+            free(bar_form);
         }
         wrefresh(win->win);
     }
@@ -104,10 +101,10 @@ void input_win_helpbar(int ch) {
                     bar_set_mode(BAR_MODE_IDLE);
                     break;
                 case KEY_BACKSPACE:
-                    form_driver(bar_form_bmark, REQ_DEL_PREV);
+                    form_driver(bar_form, REQ_DEL_PREV);
                     break;
                 default:
-                    form_driver(bar_form_bmark, ch);
+                    form_driver(bar_form, ch);
             }
             break;
         case BAR_MODE_SEARCH:
@@ -117,10 +114,10 @@ void input_win_helpbar(int ch) {
                     bar_set_mode(BAR_MODE_IDLE);
                     break;
                 case KEY_BACKSPACE:
-                    form_driver(bar_form_search, REQ_DEL_PREV);
+                    form_driver(bar_form, REQ_DEL_PREV);
                     break;
                 default:
-                    form_driver(bar_form_search, ch);
+                    form_driver(bar_form, ch);
             }
             break;
         default:
@@ -128,45 +125,45 @@ void input_win_helpbar(int ch) {
     }
 }
 
-void bar_form_init() {
+void bar_form_init(BarMode mode) {
     Win *win;
+    int rows, cols;
+    int fwidth;
 
-    FIELD **fields = (FIELD **)malloc(2 * sizeof(FIELD *));
-    fields[1] = NULL;
+    if (mode == BAR_MODE_IDLE) return;
+
+    if (bar_fields != NULL) free(bar_fields);
+    bar_fields = (FIELD **)malloc(2 * sizeof(FIELD *));
+    bar_fields[1] = NULL;
 
     win = wins[WIN_IDX_HELPBAR];
 
-    /* FIXME: Handle field dimensions properly */
-    bar_input_bmark = new_field(1, 10, 0, 0, 0, 0);
-    set_field_type(bar_input_bmark, TYPE_INTEGER, 0, 0, INT_MAX);
-    set_field_back(bar_input_bmark, A_UNDERLINE);
-    field_opts_off(bar_input_bmark, O_AUTOSKIP);
-    fields[0] = bar_input_bmark;
-    bar_form_bmark = new_form(fields);
-    set_form_win(bar_form_bmark, win->win);
-    set_form_sub(bar_form_bmark, derwin(win->win, win->r, win->c, 2, 2));
+    getmaxyx(win->win, rows, cols);
+    fwidth = cols - 2;
 
-    /* FIXME: Handle field dimensions properly */
-    bar_input_search = new_field(1, 40, 0, 0, 0, 0);
-    set_field_type(bar_input_search, TYPE_REGEXP, "*");
-    set_field_back(bar_input_search, A_UNDERLINE);
-    field_opts_off(bar_input_search, O_AUTOSKIP);
-    fields[0] = bar_input_search;
-    bar_form_search = new_form(fields);
-    set_form_win(bar_form_search, win->win);
-    set_form_sub(bar_form_search, derwin(win->win, win->r, win->c, 2, 2));
-    post_form(bar_form_search);
+    bar_input = new_field(1, fwidth, 0, 1, 0, 0);
+
+    if (mode == BAR_MODE_BMARK)
+        set_field_type(bar_input, TYPE_INTEGER, 0, 0, INT_MAX);
+    else
+        set_field_type(bar_input, TYPE_REGEXP, "*");
+
+    set_field_back(bar_input, A_UNDERLINE);
+    field_opts_off(bar_input, O_AUTOSKIP);
+    bar_fields[0] = bar_input;
+    bar_form = new_form(bar_fields);
+    set_form_win(bar_form, win->win);
+    set_form_sub(bar_form, derwin(win->win, win->r, win->c, 1, 1));
 }
 
 void bar_init() {
     clean_helpbar();
-    bar_form_init();
 }
 
 void _save_bookmark() {
     char *bookmark;
-    form_driver(bar_form_bmark, REQ_VALIDATION);
-    bookmark = field_buffer(bar_input_bmark, 0);
+    form_driver(bar_form, REQ_VALIDATION);
+    bookmark = field_buffer(bar_input, 0);
     *(strchr(bookmark, ' ')) = '\0';
 
     if (active_win() == wins[WIN_IDX_PAGES]) {
@@ -176,13 +173,13 @@ void _save_bookmark() {
         if (bm) add_bookmark(bm->page, bookmark, bm);
     }
 
-    set_field_buffer(bar_input_bmark, 0, "");
+    set_field_buffer(bar_input, 0, "");
 }
 
 void perform_search() {
     char *term;
-    form_driver(bar_form_search, REQ_VALIDATION);
-    term = field_buffer(bar_input_search, 0);
+    form_driver(bar_form, REQ_VALIDATION);
+    term = field_buffer(bar_input, 0);
     *(strchr(term, ' ')) = '\0';
 
     if (active_win() == wins[WIN_IDX_PAGES]) {
@@ -193,5 +190,5 @@ void perform_search() {
         die("Search not defined for active window.");
     }
 
-    set_field_buffer(bar_input_search, 0, "");
+    set_field_buffer(bar_input, 0, "");
 }
