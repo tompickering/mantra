@@ -44,12 +44,27 @@ BarMode bar_mode = BAR_MODE_IDLE;
 
 const char helpstr[] = "b-Bookmark  /-Search  Tab-Switch";
 
+void clean_helpbar() {
+    int cols, rows;
+    Win *win = wins[WIN_IDX_HELPBAR];
+    char *wiper;
+
+    getmaxyx(win->win, rows, cols);
+    wiper = calloc(cols + 1, sizeof(char));
+    memset(wiper, ' ', cols);
+    mvwprintw(win->win, 0, 0, wiper);
+    free(wiper);
+}
+
 BarMode bar_get_mode() {
     return bar_mode;
 }
 
 void bar_set_mode(BarMode mode) {
-    bar_mode = mode;
+    if (bar_mode != mode) {
+        clean_helpbar();
+        bar_mode = mode;
+    }
 }
 
 void draw_win_helpbar() {
@@ -132,6 +147,11 @@ void bar_form_init() {
     set_form_win(bar_form_search, win->win);
     set_form_sub(bar_form_search, derwin(win->win, win->r, win->c, 2, 2));
     post_form(bar_form_search);
+}
+
+void bar_init() {
+    clean_helpbar();
+    bar_form_init();
 }
 
 void _save_bookmark() {

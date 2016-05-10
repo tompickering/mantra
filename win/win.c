@@ -83,7 +83,7 @@ void win_init_all() {
     if (bookmarks) win_act_idx = WIN_IDX_BOOKMARKS;
     else win_act_idx = WIN_IDX_PAGES;
 
-    bar_form_init();
+    bar_init();
 }
 
 /**
