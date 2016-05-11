@@ -29,6 +29,7 @@ typedef enum {
 extern BarMode bar_mode;
 
 void bar_init();
+void bar_form_init(BarMode);
 BarMode bar_get_mode();
 void bar_set_mode();
 void _save_bookmark();

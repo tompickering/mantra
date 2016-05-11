@@ -41,6 +41,8 @@ FIELD **bar_fields = NULL;
 BarMode bar_mode = BAR_MODE_IDLE;
 
 const char helpstr[] = "b-Bookmark  /-Search  Tab-Switch";
+const char prompt_bmark[] = "Line: ";
+const char prompt_search[] = "Search: ";
 
 void clean_helpbar() {
     int cols, rows;
@@ -87,6 +89,10 @@ void draw_win_helpbar() {
         if (xoff > 0)
             wmove(win->win, 0, xoff);
         wprintw(win->win, "%s", helpstr);
+    } else if (bar_mode == BAR_MODE_BMARK) {
+        mvwprintw(win->win, 0, 1, "%s", prompt_bmark);
+    } else if (bar_mode == BAR_MODE_SEARCH) {
+        mvwprintw(win->win, 0, 1, "%s", prompt_search);
     }
 
     wrefresh(win->win);
@@ -129,6 +135,7 @@ void bar_form_init(BarMode mode) {
     Win *win;
     int rows, cols;
     int fwidth;
+    int prompt_len;
 
     if (mode == BAR_MODE_IDLE) return;
 
@@ -141,7 +148,18 @@ void bar_form_init(BarMode mode) {
     getmaxyx(win->win, rows, cols);
     fwidth = cols - 2;
 
-    bar_input = new_field(1, fwidth, 0, 1, 0, 0);
+    if (mode == BAR_MODE_BMARK) prompt_len = strlen(prompt_bmark);
+    else prompt_len = strlen(prompt_search);
+    fwidth -= prompt_len;
+
+    if (fwidth <= 0) {
+        /* FIXME - Make the reason for this (lack of room)
+         * more obvious to the user? */
+        bar_set_mode(BAR_MODE_IDLE);
+        return;
+    }
+
+    bar_input = new_field(1, fwidth, 0, 1 + prompt_len, 0, 0);
 
     if (mode == BAR_MODE_BMARK)
         set_field_type(bar_input, TYPE_INTEGER, 0, 0, INT_MAX);
