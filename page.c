@@ -90,7 +90,7 @@ void pages_init() {
 
 Page *search_page(char *sect, char *name) {
     Page *inspect = SECT[sect[0] - '0'];
-    while (!strncmp(inspect->sect, sect, 1)) {
+    while (inspect < pages + NPAGES && !strncmp(inspect->sect, sect, 1)) {
         if (!strcmp(name, inspect->name))
             return inspect;
         inspect++;
