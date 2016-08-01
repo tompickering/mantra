@@ -130,6 +130,8 @@ void input_win_helpbar(int ch) {
                     bar_set_mode(BAR_MODE_IDLE);
                     break;
                 case KEY_BACKSPACE:
+                    if (!strcmp(field_buffer(bar_input, 0), ""))
+                        break;
                     load();
                     form_driver(bar_form, REQ_DEL_PREV);
                     perform_search();
