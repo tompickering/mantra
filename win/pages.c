@@ -37,6 +37,8 @@ int _prev_row = 0;
 int _page_start = 0;
 char *_page_search = NULL;
 Layout *_page_layout = NULL;
+int _saved_row = 0;
+int _saved_start = 0;
 
 void _page_init_layout() {
     _page_layout = new_layout();
@@ -47,6 +49,16 @@ void _page_init_layout() {
 
 Page *get_current_page() {
     return &pages[_page_start + _current_row];
+}
+
+void save_location_page() {
+    _saved_row = _current_row;
+    _saved_start = _page_start;
+}
+
+void load_location_page() {
+    _current_row = _saved_row;
+    _page_start = _saved_start;
 }
 
 void win_page_show(Win *win) {
@@ -179,7 +191,6 @@ void search_pagewin(bool down, char *term) {
     }
 
     if (_page_search) {
-        if (_navigate(down)) _jump_to_end(!down);
         page = get_current_page();
         while (!matches_regex(page->name, _page_search)) {
             if (_navigate(down)) _jump_to_end(!down);
@@ -212,6 +223,10 @@ void input_win_pages(int ch) {
         case K_NEXT:
         case K_PREV:
             down = (k == K_PREV) ? false : true;
+            /* search function wil not move if the regex
+             * matches the current item. Navigate first
+             * in order to progress to the next match */
+            _navigate(down);
             search_pagewin(down, NULL);
             break;
         case K_OPEN:

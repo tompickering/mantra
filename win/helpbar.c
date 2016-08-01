@@ -68,6 +68,14 @@ void bar_set_mode(BarMode mode) {
         if (mode == BAR_MODE_BMARK || mode == BAR_MODE_SEARCH) {
             bar_form_init(mode);
             post_form(bar_form);
+
+            /* Save the current location; incremental search means
+             * that we may wish to reset to the current position */
+            if (mode == BAR_MODE_SEARCH) {
+                void (*save)() = active_win() == wins[WIN_IDX_PAGES] ?
+                    save_location_page : save_location_bm;
+                save();
+            }
         } else if (mode == BAR_MODE_IDLE && bar_form != NULL) {
             unpost_form(bar_form);
             free(bar_form);
@@ -99,6 +107,8 @@ void draw_win_helpbar() {
 }
 
 void input_win_helpbar(int ch) {
+    void (*load)() = active_win() == wins[WIN_IDX_PAGES] ?
+        load_location_page : load_location_bm;
     switch (bar_mode) {
         case BAR_MODE_BMARK:
             switch (ch) {
@@ -116,14 +126,17 @@ void input_win_helpbar(int ch) {
         case BAR_MODE_SEARCH:
             switch (ch) {
                 case '\r':
-                    perform_search();
+                    set_field_buffer(bar_input, 0, "");
                     bar_set_mode(BAR_MODE_IDLE);
                     break;
                 case KEY_BACKSPACE:
+                    load();
                     form_driver(bar_form, REQ_DEL_PREV);
+                    perform_search();
                     break;
                 default:
                     form_driver(bar_form, ch);
+                    perform_search();
             }
             break;
         default:
@@ -207,6 +220,4 @@ void perform_search() {
     } else {
         die("Search not defined for active window.");
     }
-
-    set_field_buffer(bar_input, 0, "");
 }

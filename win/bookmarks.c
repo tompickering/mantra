@@ -38,6 +38,8 @@ Bookmark *_bm_start = NULL;
 Bookmark *_current_bm = NULL;
 char *_bm_search = NULL;
 Layout *_bm_layout = NULL;
+int _saved_row_bm = 0;
+Bookmark *_saved_bm_start = NULL;
 
 void _bm_init_layout() {
     _bm_layout = new_layout();
@@ -70,6 +72,16 @@ void _update_current_bm() {
         _current_bm = _current_bm->next;
         if (_current_bm == NULL) break;
     }
+}
+
+void save_location_bm() {
+    _saved_row_bm = _current_row_bm;
+    _saved_bm_start = _bm_start;
+}
+
+void load_location_bm() {
+    _current_row_bm = _saved_row_bm;
+    _bm_start = _saved_bm_start;
 }
 
 void win_bookmarks_show(Win *win) {
@@ -271,7 +283,6 @@ void search_bmwin(bool down, char *term) {
     }
 
     if (_current_bm && _bm_search) {
-        if (_navigate_bm(down)) _jump_to_end_bm(!down);
         while (_current_bm && !matches_regex(_current_bm->page->name, _bm_search)) {
             if (_navigate_bm(down)) _jump_to_end_bm(!down);
             if (_current_bm == start) break;
@@ -291,6 +302,9 @@ void input_win_bookmarks(int ch) {
         case K_UP:
         case K_DOWN:
             down = (k == K_UP) ? false : true;
+            /* search function wil not move if the regex
+             * matches the current item. Navigate first
+             * in order to progress to the next match */
             _navigate_bm(down);
             break;
         case K_HOME:
@@ -301,6 +315,7 @@ void input_win_bookmarks(int ch) {
         case K_NEXT:
         case K_PREV:
             down = (k == K_PREV) ? false : true;
+            _navigate_bm(down);
             search_bmwin(down, NULL);
             break;
         case K_OPEN:
