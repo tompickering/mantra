@@ -17,6 +17,8 @@
  *                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#define _GNU_SOURCE /* For strchrnul */
+
 #include "helpbar.h"
 #include "win.h"
 
@@ -174,7 +176,7 @@ void bar_form_init(BarMode mode) {
         return;
     }
 
-    bar_input = new_field(1, fwidth, 0, 1 + prompt_len, 0, 0);
+    bar_input = new_field(1, fwidth, 0, 1, 0, 0);
 
     if (mode == BAR_MODE_BMARK)
         set_field_type(bar_input, TYPE_INTEGER, 0, 0, INT_MAX);
@@ -186,7 +188,7 @@ void bar_form_init(BarMode mode) {
     bar_fields[0] = bar_input;
     bar_form = new_form(bar_fields);
     set_form_win(bar_form, win->win);
-    set_form_sub(bar_form, derwin(win->win, win->r, win->c, 1, 1));
+    set_form_sub(bar_form, derwin(win->win, win->r, win->c - prompt_len, 1, 1 + prompt_len));
 }
 
 void bar_init() {
@@ -212,8 +214,8 @@ void _save_bookmark() {
 void perform_search() {
     char *term;
     form_driver(bar_form, REQ_VALIDATION);
-    term = field_buffer(bar_input, 0);
-    *(strchr(term, ' ')) = '\0';
+    term = strdup(field_buffer(bar_input, 0));
+    *(strchrnul(term, ' ')) = '\0';
 
     if (active_win() == wins[WIN_IDX_PAGES]) {
         search_pagewin(true, term);
@@ -222,4 +224,6 @@ void perform_search() {
     } else {
         die("Search not defined for active window.");
     }
+
+    free(term);
 }
