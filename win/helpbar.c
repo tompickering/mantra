@@ -45,11 +45,11 @@ const char prompt_bmark[] = "Line: ";
 const char prompt_search[] = "Search: ";
 
 void clean_helpbar() {
-    int cols, rows;
+    int cols;
     Win *win = wins[WIN_IDX_HELPBAR];
     char *wiper;
 
-    getmaxyx(win->win, rows, cols);
+    cols = getmaxx(win->win);
     wiper = calloc(cols + 1, sizeof(char));
     memset(wiper, ' ', cols);
     mvwprintw(win->win, 0, 0, wiper);
@@ -148,7 +148,7 @@ void input_win_helpbar(int ch) {
 
 void bar_form_init(BarMode mode) {
     Win *win;
-    int rows, cols;
+    int cols;
     int fwidth;
     int prompt_len;
 
@@ -160,7 +160,7 @@ void bar_form_init(BarMode mode) {
 
     win = wins[WIN_IDX_HELPBAR];
 
-    getmaxyx(win->win, rows, cols);
+    cols = getmaxx(win->win);
     fwidth = cols - 2;
 
     if (mode == BAR_MODE_BMARK) prompt_len = strlen(prompt_bmark);
