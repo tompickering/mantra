@@ -76,6 +76,6 @@ void save_location_bm();
 void load_location_bm();
 Win *active_win();
 char *string_clean_buffer(char *, char *, unsigned int);
-void open_page(char *, char *, char *);
+int open_page(char *, char *, char *);
 
 #endif

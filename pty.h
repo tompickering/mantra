@@ -20,6 +20,6 @@
 #ifndef GUARD_PTY_H
 #define GUARD_PTY_H
 
-void run_pty(char **, char *);
+int run_pty(char **, char *);
 
 #endif

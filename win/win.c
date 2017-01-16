@@ -203,14 +203,17 @@ char *string_clean_buffer(char *buf, char *src, unsigned int len) {
 /**
  * Spawn a 'man' process displaying the requested page.
  */
-void open_page(char *sect, char *page, char *line) {
+int open_page(char *sect, char *page, char *line) {
     char *cmd[] = { "man", "--pager=less", NULL, NULL, NULL };
     int line_str_len;
     char *line_str = "0g";
     char *cr;
+    int ext_code;
 
     cmd[2] = sect;
     cmd[3] = page;
+
+    if (!cmd[2]) cmd[2] = "";
 
     if (line) {
         line_str_len = strlen(line);
@@ -223,11 +226,13 @@ void open_page(char *sect, char *page, char *line) {
     }
 
     endwin();
-    run_pty(cmd, line_str);
+    ext_code = run_pty(cmd, line_str);
 
     if (line)
         free(line_str);
     refresh();
     win_clear_all();
+
+    return ext_code;
 }
 

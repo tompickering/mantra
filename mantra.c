@@ -73,7 +73,14 @@ int main(int argc, char **argv) {
     ncurses_init();
     win_init_all();
 
-    draw_screen();
+    if (argc == 1) {
+        draw_screen();
+    } else {
+        int ext_code;
+        ext_code = open_page(NULL, argv[1], 0);
+        endwin();
+        return ext_code;
+    }
 
     do {
         ch = getch();

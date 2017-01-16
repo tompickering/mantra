@@ -76,11 +76,12 @@ int init_tty_raw(int fd, struct termios *tty_base_attrs) {
     return 0;
 }
 
-void run_pty(char **cmd, char *input) {
+int run_pty(char **cmd, char *input) {
     struct termios tty_attrs;
     struct winsize ws;
     pid_t child_pid;
     int master;
+    int status;
 
     master = open("/dev/ptmx", O_RDWR | O_NOCTTY);
 
@@ -184,7 +185,7 @@ void run_pty(char **cmd, char *input) {
                 }
             }
 
-            if (waitpid(child_pid, NULL, WNOHANG) > 0)
+            if (waitpid(child_pid, &status, WNOHANG) > 0)
                 break;
         }
 
@@ -194,6 +195,7 @@ void run_pty(char **cmd, char *input) {
         /* Restore original tty settings */
         if (tcsetattr(STDIN_FILENO, TCSADRAIN, &tty_attrs) == -1)
             die(NULL);
-
     }
+
+    return WEXITSTATUS(status);
 }
