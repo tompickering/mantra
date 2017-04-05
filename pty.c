@@ -34,7 +34,7 @@
 
 #include "pty.h"
 
-#define _XOPEN_SOURCE   /* Needed for ptsname() definition */
+#define _GNU_SOURCE   /* Needed for ptsname() definition */
 #define PTY_IO_BUF_SZ 256
 
 #include <stdlib.h>
