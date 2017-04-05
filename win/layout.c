@@ -1,7 +1,6 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
  * Mantra: Man page bookmarker                                           *
  * Copyright (C) 2015  Tom Pickering                                     *
- * Code in this file derived from code (C) 2015 Michael Kerrisk          *
  *                                                                       *
  * This program is free software: you can redistribute it and/or modify  *
  * it under the terms of the GNU General Public License as published by  *
