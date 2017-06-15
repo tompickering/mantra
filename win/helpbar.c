@@ -186,7 +186,7 @@ void bar_form_init(BarMode mode) {
     bar_fields[0] = bar_input;
     bar_form = new_form(bar_fields);
     set_form_win(bar_form, win->win);
-    set_form_sub(bar_form, derwin(win->win, win->r, win->c, 1, 1));
+    set_form_sub(bar_form, derwin(win->win, win->r, win->c, 0, 0));
 }
 
 void bar_init() {
