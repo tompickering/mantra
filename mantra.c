@@ -17,6 +17,7 @@
  *                                                                       *
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+#include <unistd.h>
 #include <signal.h>
 #include <stdbool.h>
 
@@ -57,10 +58,25 @@ void ncurses_close() {
     endwin();
 }
 
+/**
+ * If we messed up and SEGVd, try to close
+ * ncurses and put the user's terminal back
+ * into a reasonable state.
+ */
+void handle_sigsegv(int sig) {
+    /* Put the default handler back */
+    signal(sig, SIG_DFL);
+    ncurses_close();
+    /* 'Raise' the SEGV to trigger usual OS
+     * behaviour */
+    kill(getpid(), sig);
+}
+
 int main(int argc, char **argv) {
     int ch = 0;
     bool running = true;
 
+    signal(SIGSEGV, handle_sigsegv);
     signal(SIGWINCH, handle_sigwinch);
 
     printf("Loading pages...\n");
