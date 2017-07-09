@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <signal.h>
 #include <stdbool.h>
+#include <execinfo.h>
 
 #include <ncurses.h>
 
@@ -64,9 +65,14 @@ void ncurses_close() {
  * into a reasonable state.
  */
 void handle_sigsegv(int sig) {
+    int bt_calls = 20;
+    void *bt[bt_calls];
+    int bt_sz;
     /* Put the default handler back */
     signal(sig, SIG_DFL);
     ncurses_close();
+    bt_sz = backtrace(bt, bt_calls);
+    backtrace_symbols_fd(bt, bt_sz, STDERR_FILENO);
     /* 'Raise' the SEGV to trigger usual OS
      * behaviour */
     kill(getpid(), sig);
